@@ -1,38 +1,35 @@
 import React from 'react'
 import {Card, CardContent, Typography, CardActions, Button } from '@mui/material';
 
-// const Person = state
-const props = []
-class Profile extends React.Component {
-  constructor(props){
-    super(props);
-    this.state = {id:0,
-                  name: 'Wendy',
-                  location: 'Wellesley',
-                  pronouns:"she/they",
-                  interests:"baking, hiking"};
+class Profile extends React.Component{
+  deleteUser(){
+    this.setState({  //not working atm
+      members: this.props.state.members.filter(member => member.username !== this.props.state.member.username)
+    }) 
   }
     render() {
-      return <Card sx={{ minWidth: 275 }}>
+      return <Card sx={{ minWidth: 275, maxWidth:300 }} variant="outlined">
       <CardContent>
         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
           Member
         </Typography>
         <Typography variant="h5" component="div">
-          {this.state.name}
+          
+          {this.props.state.member.firstname} {this.props.state.member.lastname}
         </Typography>
         <Typography sx={{ mb: 1.5 }} color="text.secondary">
-        {this.state.location}
+        {this.props.state.member.username}
         </Typography>
         <Typography variant="body2">
-        {this.state.pronouns}
-          <br />
-          interests: {this.state.interests}
+          events: insert list of events here
+          <br/> coinem: {this.props.state.member.coinem}
+          {/* {JSON.stringify(this.props.state)} */}
         </Typography>
+
       </CardContent>
       <CardActions style={{justifyContent: 'center'}}>
-        <Button size="small">Update User</Button>
-        <Button size="small">Delete User</Button>
+        {/* <Button size="small" onClick={() => this.updateUser()}>Update User</Button> */}
+        <Button size="small" onClick={() => this.deleteUser()}>Delete User</Button>
       </CardActions>
     </Card>;
     }

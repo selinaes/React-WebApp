@@ -1,23 +1,17 @@
 import * as React from 'react';
-import {AppBar, Toolbar, Typography, Button, IconButton} from '@mui/material';
+import {AppBar, Toolbar, Typography, Button } from '@mui/material';
+import Events from './Events';
+
 
 export default function ButtonAppBar() {
+
   return (
-      <AppBar position="static" color="warning" style={{ color: "blue" }}>
+      <AppBar position="static" color="warning" style={{ backgroundColor: "white", color:"orange", marginBottom:"2%" }}>
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-          >
-            
-          </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography variant="h6" component="div" >
             join'em
           </Typography>
-          <Button color="inherit">Events</Button>
+          <Button color="inherit" align="right" onClick={<Events/>}>Events</Button>
           <Button color="inherit">Profile</Button>
           <Button color="inherit">Switch Profile</Button>
         </Toolbar>
