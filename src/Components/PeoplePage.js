@@ -1,7 +1,7 @@
 import React from 'react';
 // import ReactDOM from 'react-dom';
-import {Card, CardContent, Typography, CardActions, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
-
+import {Input, InputAdornment, Card, CardContent, Typography, CardActions, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import AccountCircle from '@mui/icons-material/AccountCircle';
 // let currentUser = "admin";
 let updateUser;
 const initialData =  {
@@ -198,12 +198,19 @@ const initialData =  {
         fileInfo: "",
         members: initialData.members, // a list of member objects
         events: initialData.events, //a list of event objects
-        currentUser: "admin"
+        currentUser: "admin",
+        newUsername: "",
+        newFirstname:"",
+        newLastname:""
       }
       this.downloadHandler = this.downloadHandler.bind(this);
       this.uploadHandler = this.uploadHandler.bind(this);
       this.openFileHandler = this.openFileHandler.bind(this);
       this.deleteHandler = this.deleteHandler.bind(this);
+      this.switchUser = this.switchUser.bind(this);
+      this.handleNewUsername = this.handleNewUsername.bind(this);
+      this.handleNewFirstname = this.handleNewFirstname.bind(this);
+      this.handleNewLastname = this.handleNewLastname.bind(this);
     }
 
     downloadHandler (event) {
@@ -231,11 +238,25 @@ const initialData =  {
                                  // and then call the openFileHandler from 
                                  // the input component's onChange handler.      
     }
-// BUGGY
+
     switchUser(event) {
+      event.preventDefault();
       this.setState ({currentUser: event.target.value});
     }
-  
+    handleNewUsername(event) {
+      event.preventDefault();
+      this.setState ({newUsername: event.target.value});
+    }
+
+    handleNewFirstname(event) {
+      event.preventDefault();
+      this.setState ({newFirstname: event.target.value});
+    }
+
+    handleNewLastname(event) {
+      event.preventDefault();
+      this.setState ({newLastname: event.target.value});
+    }
     /**  
      * Process the uploaded file within the React app.
      */
@@ -267,11 +288,27 @@ const initialData =  {
                         .filter( member => member.username !== username )
                       });
     }
+    addHandler() {
+      this.setState({members: [...this.state.members, 
+        {"username": this.state.newUsername, 
+      "firstname": this.state.newFirstname, 
+      "lastname": this.state.newLastname,
+      "coinem": {}}] });
+      console.log(this.state.members)
+   }
+    deleteEventHandler(uid) {
+      this.setState({events: 
+                      this.state.events
+                       .filter( event => event.uid !== uid )
+                     });
+                     //remove coinem
+   }
   
     render() {
       return (
         <div>
-            <Card sx={{ minWidth: 275, maxWidth:300 }} style={{ margin:20, align:"center" }} variant="outlined">
+          <div style ={{ display:"inline-block"}}>
+            <Card  sx={{ minWidth: 275, maxWidth:300 }} style={{ margin:20, align:"center" }} variant="outlined">
               <CardContent>
                 <Typography variant="h5" component="div">
                   Switch User
@@ -300,14 +337,54 @@ const initialData =  {
                         ))}
                       </Select>
                     </FormControl>
-                    {/* <CardActions style={{justifyContent: 'center'}}>
-                <Button size="small" onClick={() => this.switchUser(updateUser)}>Switch</Button>
-              </CardActions> */}
               </CardContent>
             </Card>
+            </div>
+            <div style ={{ display:"inline-block"}}>
+            <Card  sx={{ minWidth: 275, maxWidth:300 }} style={{ margin:20, align:"center" }} variant="outlined">
+              <CardContent>
+                <Typography variant="h5" component="div">
+                  Add User
+                </Typography>
+                <FormControl fullWidth>
+                  <InputLabel id="username">Username</InputLabel>
+                  <Input
+                  required
+                  id="username"
+                  onChange={this.handleNewUsername}
+                  startAdornment={
+                  <InputAdornment position="start">
+                  <AccountCircle />
+                  </InputAdornment>
+                   }
+                       />
+                    </FormControl>
+                    <FormControl fullWidth>
+                  <InputLabel id="firstname">First Name</InputLabel>
+                  <Input
+                  required
+                  id="firstname"
+                  onChange={this.handleNewFirstname}
+                       />
+                    </FormControl>
+                    <FormControl fullWidth>
+                  <InputLabel id="firstname">Last Name</InputLabel>
+                  <Input
+                  required
+                  id="lastname"
+                  onChange={this.handleNewLastname}
+                       />
+                    </FormControl>
+              </CardContent>
+              <CardActions style={{justifyContent: 'center'}}>
+                <Button size="small" onClick={() => this.addHandler()}>Add User</Button>
+              </CardActions>
+            </Card>
+            </div>
           <h2>Members</h2>
           <div>
             {this.state.members.map (member => (
+
               <div style ={{ display:"inline-block"}}>
               <Card sx={{ minWidth: 275, maxWidth:300 }} style={{ margin:20 }} variant="outlined">
               <CardContent>
@@ -331,18 +408,36 @@ const initialData =  {
               </CardActions>
             </Card>
             </div>
-                // <td>{member.username}</td>
-              //   <tr>
-              // {/* <tr key={member.username}> */}
-              //   <td>{member.username}</td>
-              //   <td>{member.firstname} {member.lastname}</td>
-              //   <td>{member.coinem}</td>
-              //   <td><button onClick={() => this.deleteHandler(member.username)}>
-              //       delete</button></td>
-              // </tr>
             ))}
                   </div>
-  
+                  <h2>Events</h2>
+          <div>
+            {this.state.events.map (event => (
+              <div style ={{ display:"inline-block"}}>
+              <Card sx={{ minWidth: 275, maxWidth:300 }} style={{ margin:20 }} variant="outlined">
+              <CardContent>
+                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                Event { event.uid }
+                </Typography>
+                <Typography variant="h5" component="div">
+                  {event.title}
+                </Typography>
+                
+                <Typography variant="body2">
+                { event.description }
+                </Typography>
+                <Typography sx={{ fontSize: 14 }} color="orange" gutterBottom>
+                planner: { event.planner }
+                </Typography>
+        
+              </CardContent>
+              <CardActions style={{justifyContent: 'center'}}>
+                <Button size="small" onClick={() => this.deleteEventHandler(event.uid)}>Delete Event</Button>
+              </CardActions>
+            </Card>
+            </div>
+            ))}
+                  </div>  
           {/* <p><button onClick={this.downloadHandler}>
             Download the file members.json
           </button></p>

@@ -8,7 +8,7 @@ class Profile extends React.Component{
     }) 
   }
     render() {
-      return <Card sx={{ minWidth: 275, maxWidth:300 }} variant="outlined">
+      return <Card sx={{ minWidth: 275, maxWidth:300 }} style={{ marginBottom:20 }}variant="outlined" >
       <CardContent>
         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
           Member
