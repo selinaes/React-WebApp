@@ -1,22 +1,21 @@
 import sun from './sun-svgrepo-com.svg';
 import './App.css';
-import Events from './Components/Events';
+// import Events from './Components/Events';
 import NavBar from './Components/NavBar';
-import Members from './Components/Members';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import PeoplePage from './Components/PeoplePage';
+// import { BrowserRouter as Router, Route } from 'react-router-dom';
 function App() {
-<Router>
-    <Route exact path="/events" component={Events} />
-  </Router>
   return (
     <div className="App">
       <header className="App-header">
       <NavBar />
         <img src={sun} className="App-logo" alt="logo" />
+        </header>
         <h1>
           join'em
         </h1>
         <p><em>Events. Plan'em. Join'em!</em></p>
+        <PeoplePage />
         {/* <ul>
           <li>profiles that can be added viewed and deleted</li>
           <li>fake login used to change current user</li>
@@ -26,7 +25,7 @@ function App() {
           <li>members can update/delete profiles, manage events, (re)allocate coinem</li>
         </ul> */}
         {/* <Members /> */}
-        <Events />
+        
         {/* <a
           className="App-link"
           href="https://reactjs.org"
@@ -35,7 +34,7 @@ function App() {
         >
           Learn React
         </a> */}
-      </header>
+      
     </div>
   );
 }
