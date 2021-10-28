@@ -188,7 +188,6 @@ const initialData =  {
       ]
   }
 
-  
   class PeoplePage extends React.Component {
     constructor(props) {
       super(props)
@@ -307,13 +306,13 @@ const initialData =  {
     render() {
       return (
         <div>
-          <div style ={{ display:"inline-block"}}>
-            <Card  sx={{ minWidth: 275, maxWidth:300 }} style={{ margin:20, align:"center" }} variant="outlined">
+          <div id="switchUser">
+            <Card  sx={{ minWidth: 275, maxWidth:300 }} style={{ margin:20, align:"center",display:"block", marginLeft: "auto", marginRight: "auto" }} variant="outlined">
               <CardContent>
                 <Typography variant="h5" component="div">
                   Switch User
                 </Typography>
-                <Typography variant="body1" component="div">
+                <Typography variant="body1" component="div" color="orange">
                   current user: {this.state.currentUser}
                 </Typography>
                 <FormControl fullWidth>
@@ -340,7 +339,7 @@ const initialData =  {
               </CardContent>
             </Card>
             </div>
-            <div style ={{ display:"inline-block"}}>
+            <div id="addUser" style ={{ display:"inline-block"}}>
             <Card  sx={{ minWidth: 275, maxWidth:300 }} style={{ margin:20, align:"center" }} variant="outlined">
               <CardContent>
                 <Typography variant="h5" component="div">
@@ -381,14 +380,14 @@ const initialData =  {
               </CardActions>
             </Card>
             </div>
-          <h2>Members</h2>
+          <h2 id="members">Members</h2>
           <div>
             {this.state.members.map (member => (
 
               <div style ={{ display:"inline-block"}}>
               <Card sx={{ minWidth: 275, maxWidth:300 }} style={{ margin:20 }} variant="outlined">
               <CardContent>
-                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                <Typography sx={{ fontSize: 14 }} color="orange" gutterBottom>
                 { member.username }
                 </Typography>
                 <Typography variant="h5" component="div">
@@ -410,7 +409,7 @@ const initialData =  {
             </div>
             ))}
                   </div>
-                  <h2>Events</h2>
+                  <h2 id="events">Events</h2>
           <div>
             {this.state.events.map (event => (
               <div style ={{ display:"inline-block"}}>

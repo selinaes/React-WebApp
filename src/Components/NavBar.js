@@ -1,7 +1,5 @@
 import * as React from 'react';
 import {AppBar, Toolbar, Typography, Button } from '@mui/material';
-import Events from './Events';
-
 
 export default function ButtonAppBar() {
 
@@ -11,9 +9,10 @@ export default function ButtonAppBar() {
           <Typography variant="h6" component="div" >
             join'em
           </Typography>
-          <Button color="inherit" align="right" onClick={<Events/>}>Events</Button>
-          <Button color="inherit">Profile</Button>
-          <Button color="inherit">Switch Profile</Button>
+          <Button href="#events" color="inherit" align="right">Events</Button>
+          <Button href="#members" color="inherit">Members</Button>
+          <Button href="#switchUser" color="inherit">Switch Profile</Button>
+          <Button href="#addUser" color="inherit">Add Member</Button>
         </Toolbar>
       </AppBar>
   );
