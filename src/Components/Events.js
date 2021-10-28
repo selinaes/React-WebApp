@@ -1,7 +1,53 @@
 import React from 'react'
 // import NavBar from './NavBar';
+const initialData = {
+  "events": 
+      [
+        {"uid": 1, 
+         "title": "Introductory Glass Blowing",
+         "description" : "Let's gather a group for an intro glass blowing class at Diablo Glass in Boston. Aiming for a Tue/Wed night in November.", 
+         "planner": "gigi"
+         },
+  
+        {"uid": 2, 
+         "title": "Whale Watching",
+         "description" : "Organizing a weekend whale watching group from Gloucester via Cape Ann Whale Watch (https://www.seethewhales.com/).", 
+         "planner": "finz"
+         },
+        {"uid": 3, 
+         "title": "Disc golf at Borderlands", 
+         "description" : "Have you ever played disc golf? It's a fun activity for newbies and there's a nice course a Borderlands. Parts of Knives Out were filmed in the mansion there! Looking to form a foursome.",
+         "planner": "dyland"
+         }
+      ]
+}
 
-class Events extends React.Component {
+// var MAX_EVENTS = 3; 
+// var MAX_COINEM_PER_EVENT= 5;
+// var MAX_COINEM= 20;
+// var NEXT_EVENT_UID= 1;
+
+class Events extends React.Component{
+  constructor(props){
+    super(props);
+    this.state = {
+      uid: 1,
+      title: "new event",
+      description: "new description",
+      planner: "ww1",
+    };
+  }
+
+  render(){
+    return(
+      <div> </div>
+    );
+  }
+}
+
+
+
+class EventsPage extends React.Component {
     
   constructor(props){
     super(props);
@@ -48,5 +94,6 @@ class Events extends React.Component {
       </div>
   }
 }
+
 
   export default Events;
