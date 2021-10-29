@@ -2,7 +2,6 @@ import React from 'react';
 // import ReactDOM from 'react-dom';
 import {Input, InputAdornment, Card, CardContent, Typography, CardActions, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-// let currentUser = "admin";
 let updateUser;
 const initialData =  {
     "MAX_EVENTS": 3, 
@@ -195,6 +194,10 @@ const initialData =  {
       this.state = {
         fileDownloadUrl: null,
         fileInfo: "",
+        MAX_EVENTS: initialData.MAX_EVENTS, 
+        MAX_COINEM_PER_EVENT: initialData.MAX_COINEM_PER_EVENT, 
+        MAX_COINEM: initialData.MAX_COINEM, 
+        NEXT_EVENT_UID: initialData.NEXT_EVENT_UID,
         members: initialData.members, // a list of member objects
         events: initialData.events, //a list of event objects
         currentUser: "admin",
@@ -242,6 +245,23 @@ const initialData =  {
       event.preventDefault();
       this.setState ({currentUser: event.target.value});
     }
+
+    calculateUserCoinem(member) {
+      // member.coinem.map(coin => {return {...pt, x:pt/x*2}})
+      return Object.values(member.coinem).reduce((n,sum)=>n+sum, 0)
+      // Object.values(member.coinem)
+      // member.coinem.keys.map(coin => console.log(member.coinem[coin]))
+        // (this.state.members.filter(member => username === member.username))
+        // .map(member => member.coinem)
+        // .reduce((n, sum) => n+sum, 0)
+      // from list of members, select member with username, then get their coinem list and add key values
+    }
+
+    calculateEventCoinem(uid) {
+      // from list of members, select member with username, then get their coinem list and add key values
+      
+    }
+
     handleNewUsername(event) {
       event.preventDefault();
       this.setState ({newUsername: event.target.value});
@@ -282,10 +302,12 @@ const initialData =  {
     }
     
     deleteHandler(username) {
+      //delete all associated events
        this.setState({members: 
                        this.state.members
                         .filter( member => member.username !== username )
                       });
+                      
     }
     addHandler() {
       this.setState({members: [...this.state.members, 
@@ -295,6 +317,7 @@ const initialData =  {
       "coinem": {}}] });
       console.log(this.state.members)
    }
+
     deleteEventHandler(uid) {
       this.setState({events: 
                       this.state.events
@@ -395,9 +418,9 @@ const initialData =  {
                 </Typography>
                 
                 <Typography variant="body2">
-                  events planned: in progress
-                  <br/> coinem spent: in progress
-                  <br/> coinem pairs: buggy{ member.coinem.entries }
+                  events planned: { (this.state.events.filter(event => event.planner === member.username)).map(event => <span>{event.uid}, </span>)}
+                  <br/> coinem spent: { this.calculateUserCoinem(member)}
+                  <br/> coinem pairs: buggy  { Object.entries(member.coinem).forEach(([key, value]) => { return  {key}, {value}  }) }
                   {/* BUG */}
                 </Typography>
         
