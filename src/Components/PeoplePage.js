@@ -2,7 +2,6 @@ import React from 'react';
 // import ReactDOM from 'react-dom';
 import {Input, InputAdornment, Card, CardContent, Typography, CardActions, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-// let currentUser = "admin";
 let updateUser;
 const initialData =  {
     "MAX_EVENTS": 3, 
@@ -188,7 +187,6 @@ const initialData =  {
       ]
   }
 
-  
   class PeoplePage extends React.Component {
     constructor(props) {
       super(props)
@@ -196,6 +194,11 @@ const initialData =  {
       this.state = {
         fileDownloadUrl: null,
         fileInfo: "",
+        fileName: "joinem.json",
+        MAX_EVENTS: initialData.MAX_EVENTS, 
+        MAX_COINEM_PER_EVENT: initialData.MAX_COINEM_PER_EVENT, 
+        MAX_COINEM: initialData.MAX_COINEM, 
+        NEXT_EVENT_UID: initialData.NEXT_EVENT_UID,
         members: initialData.members, // a list of member objects
         events: initialData.events, //a list of event objects
         currentUser: "admin",
@@ -211,17 +214,20 @@ const initialData =  {
       this.handleNewUsername = this.handleNewUsername.bind(this);
       this.handleNewFirstname = this.handleNewFirstname.bind(this);
       this.handleNewLastname = this.handleNewLastname.bind(this);
+      this.handleNewFilename = this.handleNewFilename.bind(this);
     }
 
     downloadHandler (event) {
       event.preventDefault(); // Prevent default actions of event                   
       // Prepare the file 
-      let dataObject = {"members": this.state.members}
+      
+      let dataObject = {"members": this.state.members}//FIX! MUST ADD ALL RELEVANT DATA!!!!!
       let output = JSON.stringify(dataObject, null, 4);
   
       // Download it            
       const blob = new Blob([output]);
       const fileDownloadUrl = URL.createObjectURL(blob);
+      console.log(fileDownloadUrl)
       this.setState ({fileDownloadUrl: fileDownloadUrl},
         // setState takes a callback function as an optional 2nd argument.          
         // It is called only after the state has been updated.                       
@@ -243,6 +249,20 @@ const initialData =  {
       event.preventDefault();
       this.setState ({currentUser: event.target.value});
     }
+
+    calculateUserCoinem(member) {
+      return Object.values(member.coinem).reduce((n,sum)=>n+sum, 0)
+      
+    }
+    remainingCoinem(member){
+      return this.state.MAX_COINEM - this.calculateUserCoinem(member)
+    }
+
+    calculateEventCoinem(uid) {
+      // from list of members, select member with username, then get their coinem list and add key values
+      
+    }
+
     handleNewUsername(event) {
       event.preventDefault();
       this.setState ({newUsername: event.target.value});
@@ -260,6 +280,13 @@ const initialData =  {
     /**  
      * Process the uploaded file within the React app.
      */
+
+     handleNewFilename(event) {
+      event.preventDefault();
+      let name = event.target.value + ".json";
+      this.setState ({fileName: name});
+    }
+
     openFileHandler(event) {
         let fileInfoList = []; // Status output 
         const fileObj = event.target.files[0]; // From automated .click() on file input component
@@ -272,6 +299,7 @@ const initialData =  {
           fileInfoList.push (`File contents: ${fileContents}`)
           const jsonData= JSON.parse(fileContents);
           const memberList = jsonData.members;
+          //FIX! MUST ADD ALL RELEVANT DATA!!!!!
           this.setState ({fileInfo: fileInfoList.join("\n")});
           this.setState ({members: memberList});
         }
@@ -283,10 +311,16 @@ const initialData =  {
     }
     
     deleteHandler(username) {
+      //delete all associated events
+      if ((username === this.state.currentUser) || (this.state.currentUser === "admin")){
        this.setState({members: 
                        this.state.members
                         .filter( member => member.username !== username )
                       });
+                    }
+                  
+                    //FIX!!! warn user they are about to delete someone
+                      
     }
     addHandler() {
       this.setState({members: [...this.state.members, 
@@ -296,6 +330,7 @@ const initialData =  {
       "coinem": {}}] });
       console.log(this.state.members)
    }
+
     deleteEventHandler(uid) {
       this.setState({events: 
                       this.state.events
@@ -305,15 +340,44 @@ const initialData =  {
    }
   
     render() {
+      let adminOnly;
+      if (this.state.currentUser === "admin") {
+          adminOnly = <div>
+          <Card sx={{ minWidth: 275, maxWidth:300 }} style={{ margin:20 }} variant="outlined">
+      <CardContent>
+        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+        File Upload/Download
+        </Typography>
+        <Typography variant="body2">
+          Name of File to Download
+        <FormControl fullWidth>
+          <InputLabel id="filename">file name</InputLabel>
+          <Input
+          required
+          id="filename"
+          onChange={this.handleNewFilename}
+               />
+            </FormControl>.json
+        </Typography>
+        <Typography sx={{ fontSize: 14 }} color="orange" gutterBottom>
+     
+        </Typography>
+      </CardContent>
+      <CardActions style={{justifyContent: 'center'}}>
+        <Button size="small" onClick={this.downloadHandler}>Download file as {this.state.fileName} </Button>
+        <Button size="small" onClick={this.uploadHandler}>Upload a file!{this.state.fileName} </Button>
+      </CardActions>
+    </Card> 
+    </div>;}
       return (
         <div>
-          <div style ={{ display:"inline-block"}}>
-            <Card  sx={{ minWidth: 275, maxWidth:300 }} style={{ margin:20, align:"center" }} variant="outlined">
+          <div id="switchUser">
+            <Card  sx={{ minWidth: 275, maxWidth:300 }} style={{ margin:20, align:"center",display:"block", marginLeft: "auto", marginRight: "auto" }} variant="outlined">
               <CardContent>
                 <Typography variant="h5" component="div">
                   Switch User
                 </Typography>
-                <Typography variant="body1" component="div">
+                <Typography variant="body1" component="div" color="orange">
                   current user: {this.state.currentUser}
                 </Typography>
                 <FormControl fullWidth>
@@ -340,7 +404,7 @@ const initialData =  {
               </CardContent>
             </Card>
             </div>
-            <div style ={{ display:"inline-block"}}>
+            <div id="addUser" style ={{ display:"inline-block"}}>
             <Card  sx={{ minWidth: 275, maxWidth:300 }} style={{ margin:20, align:"center" }} variant="outlined">
               <CardContent>
                 <Typography variant="h5" component="div">
@@ -381,14 +445,14 @@ const initialData =  {
               </CardActions>
             </Card>
             </div>
-          <h2>Members</h2>
+          <h2 id="members">Members</h2>
           <div>
             {this.state.members.map (member => (
 
               <div style ={{ display:"inline-block"}}>
               <Card sx={{ minWidth: 275, maxWidth:300 }} style={{ margin:20 }} variant="outlined">
               <CardContent>
-                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                <Typography sx={{ fontSize: 14 }} color="orange" gutterBottom>
                 { member.username }
                 </Typography>
                 <Typography variant="h5" component="div">
@@ -396,10 +460,10 @@ const initialData =  {
                 </Typography>
                 
                 <Typography variant="body2">
-                  events planned: in progress
-                  <br/> coinem spent: in progress
-                  <br/> coinem pairs: buggy{ member.coinem.entries }
-                  {/* BUG */}
+                  events planned: { (this.state.events.filter(event => event.planner === member.username)).map(event => <span>{event.uid}, </span>)} 
+                  | { Object.values(this.state.events.filter(event => event.planner === member.username)).length } total
+                  <br/> coinem spent: { this.calculateUserCoinem(member)} coinem left: { this.remainingCoinem(member)}
+                  <br/> coinem pairs: { JSON.stringify(member.coinem)}
                 </Typography>
         
               </CardContent>
@@ -410,7 +474,7 @@ const initialData =  {
             </div>
             ))}
                   </div>
-                  <h2>Events</h2>
+                  <h2 id="events">Events</h2>
           <div>
             {this.state.events.map (event => (
               <div style ={{ display:"inline-block"}}>
@@ -437,14 +501,8 @@ const initialData =  {
             </Card>
             </div>
             ))}
-                  </div>  
-          {/* <p><button onClick={this.downloadHandler}>
-            Download the file members.json
-          </button></p>
-  
-          <p><button onClick={this.uploadHandler}>
-            Upload a file!
-          </button></p>
+                  </div> 
+          {adminOnly}
           
           <h2 className="hidden"> Normally Hidden Inputs</h2>
           <p className="hidden">
@@ -462,7 +520,7 @@ const initialData =  {
               }
             />
             <a className="hidden" 
-              download="members.json" // download attribute specifies file name                                        // to download to when clicking link 
+              download={this.state.fileName} // download attribute specifies file name                                        // to download to when clicking link 
                href={this.state.fileDownloadUrl}
                ref={
                 // This is so-called "callback ref" that captures the associated 
@@ -470,50 +528,14 @@ const initialData =  {
                 // See https://reactjs.org/docs/refs-and-the-dom.html
                 domElt => this.domFileDownload = domElt
               }
-            >download it</a>
-          <h2>File Data</h2>
-          <pre className="status">{this.state.fileInfo}</pre> */}
+            > download it</a>
+          <h2 className="hidden">File Data</h2>
+          <pre className="status">{this.state.fileInfo}</pre>
+          <p style={{padding:"5%"}}>joining'em since 2021</p>
         </div>
         );
     }
   }
+
   
-  /**
-   * ErrorBoundaries can improve error reporting. This class is copied from:
-   * https://reactjs.org/docs/error-boundaries.html
-   */
-//   class ErrorBoundary extends React.Component {
-  
-//     constructor(props) {
-//       super(props);
-//       this.state = { hasError: false };
-//     }
-  
-//     static getDerivedStateFromError(error) {    
-//       // Update state so the next render will show the fallback UI.    
-//       return { hasError: true };
-//     }
-    
-//     componentDidCatch(error, errorInfo) {    
-//       // You can also log the error to an error reporting service    
-//       console.log(`error: ${error}; errorInfo: ${errorInfo}`);  
-//     }
-   
-//     render() {
-//       if (this.state.hasError) {      
-//         // You can render any custom fallback UI      
-//         return <h1>Something went wrong.</h1>;    
-//       }
-//       return this.props.children; 
-//     }
-//   }
-  
-//   ReactDOM.render( // The top-level page is a FileUploadDownloadApp
-//     <ErrorBoundary>
-//         <PeoplePage />
-//     </ErrorBoundary>
-//     ,
-//     document.getElementById('root')
-//   );
-  
-  export default PeoplePage;
+export default PeoplePage;
