@@ -1,8 +1,7 @@
 import React from 'react';
-// import ReactDOM from 'react-dom';
 import {Input, InputAdornment, Card, CardContent, Typography, CardActions, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-let updateUser;
+import Profile from "./Profile";
 const initialData =  {
     "MAX_EVENTS": 3, 
     "MAX_COINEM_PER_EVENT": 5, 
@@ -340,6 +339,7 @@ const initialData =  {
    }
   
     render() {
+      let updateUser;
       let adminOnly;
       if (this.state.currentUser === "admin") {
           adminOnly = <div>
@@ -365,7 +365,7 @@ const initialData =  {
       </CardContent>
       <CardActions style={{justifyContent: 'center'}}>
         <Button size="small" onClick={this.downloadHandler}>Download file as {this.state.fileName} </Button>
-        <Button size="small" onClick={this.uploadHandler}>Upload a file!{this.state.fileName} </Button>
+        <Button size="small" onClick={this.uploadHandler}>Upload a file!</Button>
       </CardActions>
     </Card> 
     </div>;}
@@ -448,30 +448,7 @@ const initialData =  {
           <h2 id="members">Members</h2>
           <div>
             {this.state.members.map (member => (
-
-              <div style ={{ display:"inline-block"}}>
-              <Card sx={{ minWidth: 275, maxWidth:300 }} style={{ margin:20 }} variant="outlined">
-              <CardContent>
-                <Typography sx={{ fontSize: 14 }} color="orange" gutterBottom>
-                { member.username }
-                </Typography>
-                <Typography variant="h5" component="div">
-                  {member.firstname} {member.lastname}
-                </Typography>
-                
-                <Typography variant="body2">
-                  events planned: { (this.state.events.filter(event => event.planner === member.username)).map(event => <span>{event.uid}, </span>)} 
-                  | { Object.values(this.state.events.filter(event => event.planner === member.username)).length } total
-                  <br/> coinem spent: { this.calculateUserCoinem(member)} coinem left: { this.remainingCoinem(member)}
-                  <br/> coinem pairs: { JSON.stringify(member.coinem)}
-                </Typography>
-        
-              </CardContent>
-              <CardActions style={{justifyContent: 'center'}}>
-                <Button size="small" onClick={() => this.deleteHandler(member.username)}>Delete User</Button>
-              </CardActions>
-            </Card>
-            </div>
+              <Profile member={member} events={this.state.events} coinemSpent = { this.calculateUserCoinem(member)} coinemLeft= {this.remainingCoinem(member)} onDelete={() => this.deleteHandler(member.username)}/>
             ))}
                   </div>
                   <h2 id="events">Events</h2>

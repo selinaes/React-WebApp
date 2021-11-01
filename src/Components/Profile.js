@@ -1,38 +1,29 @@
 import React from 'react'
 import {Card, CardContent, Typography, CardActions, Button } from '@mui/material';
 
-class Profile extends React.Component{
-  deleteUser(){
-    this.setState({  //not working atm
-      members: this.props.state.members.filter(member => member.username !== this.props.state.member.username)
-    }) 
-  }
-    render() {
-      return <Card sx={{ minWidth: 275, maxWidth:300 }} style={{ marginBottom:20 }}variant="outlined" >
-      <CardContent>
-        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          Member
-        </Typography>
-        <Typography variant="h5" component="div">
-          
-          {this.props.state.member.firstname} {this.props.state.member.lastname}
-        </Typography>
-        <Typography sx={{ mb: 1.5 }} color="text.secondary">
-        {this.props.state.member.username}
-        </Typography>
-        <Typography variant="body2">
-          events: insert list of events here
-          <br/> coinem: {this.props.state.member.coinem}
-          {/* {JSON.stringify(this.props.state)} */}
-        </Typography>
+const Profile = props => (
+  <div style ={{ display:"inline-block"}}>
+  <Card sx={{ width:300, height:225 }} style={{ margin:20 }} variant="outlined">
+  <CardContent>
+    <Typography sx={{ fontSize: 14 }} color="orange" gutterBottom>
+    { props.member.username }
+    </Typography>
+    <Typography variant="h5" component="div">
+      {props.member.firstname} {props.member.lastname}
+    </Typography>
+    
+    <Typography variant="body2">
+      events planned: { (props.events.filter(event => event.planner === props.member.username)).map(event => <span>{event.uid}, </span>)} 
+      | { Object.values(props.events.filter(event => event.planner === props.member.username)).length } total
+      <br/> coinem spent: {props.coinemLeft} coinem left: {props.coinemLeft}
+      <br/> coinem pairs: { JSON.stringify(props.member.coinem)}
+    </Typography>
 
-      </CardContent>
-      <CardActions style={{justifyContent: 'center'}}>
-        {/* <Button size="small" onClick={() => this.updateUser()}>Update User</Button> */}
-        <Button size="small" onClick={() => this.deleteUser()}>Delete User</Button>
-      </CardActions>
-    </Card>;
-    }
-  }
-
-  export default Profile;
+  </CardContent>
+  <CardActions style={{justifyContent: 'center'}}>
+    <Button size="small" onClick={props.onDelete}>Delete User</Button>
+  </CardActions>
+</Card>
+</div>
+)
+export default Profile;
