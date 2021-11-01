@@ -3,6 +3,7 @@ import './App.css';
 // import Events from './Components/Events';
 import NavBar from './Components/NavBar';
 import PeoplePage from './Components/PeoplePage';
+import Event from './Components/Events';
 // import { BrowserRouter as Router, Route } from 'react-router-dom';
 function App() {
   
@@ -18,6 +19,7 @@ function App() {
         </h1>
         <p><em>Events. Plan'em. Join'em!</em></p>
         <PeoplePage />
+        <Event />
         {/* <ul>
           <li>profiles that can be added viewed and deleted</li>
           <li>fake login used to change current user</li>
