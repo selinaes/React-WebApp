@@ -62,7 +62,7 @@ class Event extends React.Component{
         
           </CardContent>
             <CardActions style={{justifyContent: 'center'}}>
-              <Button size="small" onClick={() => this.deleteEventHandler(this.state.uid)}>Delete Event</Button>
+              <Button size="small" onClick={() => this.props.onDelete(this.state)}>Delete Event</Button>
             </CardActions>
           </Card>
       </div>
@@ -88,19 +88,20 @@ class AddEvent extends React.Component {
 
   handleNewTitle(event) {
     event.preventDefault();
-    const newEvt = this.state.currentEvt.slice();
+    const newEvt = {...this.state.currentEvt};
     newEvt.title = event.target.value
     this.setState ({currentEvt: newEvt});
   }
 
   handleNewDescription(event) {
     event.preventDefault();
-    const newEvt = this.state.currentEvt.slice();
+    const newEvt = {...this.state.currentEvt};
     newEvt.description = event.target.value
     this.setState ({currentEvt: newEvt});
   }
 
   render () {
+    const crEvt = this.state.currentEvt;
     return (
       <div id="addEvent" style ={{ display:"inline-block"}}>
             <Card  sx={{ minWidth: 275, maxWidth:300 }} style={{ margin:20, align:"center" }} variant="outlined">
@@ -126,7 +127,7 @@ class AddEvent extends React.Component {
                     </FormControl>
               </CardContent>
               <CardActions style={{justifyContent: 'center'}}>
-                <Button size="small" onClick={() => this.props.onAddEvent(this.state.currentEvt)}>Add Event</Button> 
+                <Button size="small" onClick={() => this.props.onAddEvent()}>Add Event</Button> 
               </CardActions>
             </Card>
             </div>
@@ -146,39 +147,39 @@ class EventsPage extends React.Component {
       MAX_COINEM: 20, 
       NEXT_EVENT_UID: 13, 
       currentUser: 'admin',
-       events:[{uid:1, 
+      events:[{uid:1, 
                 title:"new event", 
                 description:"describe event here",
                 planner:"ww1"}],
-      event:{uid:1, 
-              title:"new event", 
-              description:"describe event here",
-              planner:"ww1"},
     }
   }
   
-  handleAddEvent(eventObj){
 
+
+  handleAddEvent(eventObj){
+    this.setState(
+      {events: [...this.state.events, eventObj]}
+    );
+  }
+
+  handleDeleteEvent(eventObj){
+    this.setState(
+      {events: this.state.events.filter(event => event.uid != eventObj.uid)}
+    );
   }
 
   render() {
-      return <div>
-          {/* <NavBar/> */}
-            <div>
-            <AddEvent onAddEvent = {(eventObj) => this.handleAddEvent(eventObj)}/>
-              <p>Event</p>
-             {this.state.events.map(
-                 (event) => <div>
-                 <h4>
-                 {event.title} | <span style={{color:"orange"}}>{event.planner}</span>
-             </h4>
-             <p>{event.description}</p></div>)
+    return <div>
+      <div>
+        <AddEvent onAddEvent = {(eventObj) => this.handleAddEvent(eventObj)}/>
+          <p>Event</p>
+            {this.state.events.map(
+                (event) => <Event onDelete = {(event) => this.handleDeleteEvent(event)}/>)
             }
-           </div>
+        </div>
       <p>{JSON.stringify(this.state)}</p>
-      </div>
+    </div>
   }
 }
 
-
-  export default Event;
+  export {Event,AddEvent};
