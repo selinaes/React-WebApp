@@ -1,7 +1,7 @@
 import React from 'react'
 import NavBar from './NavBar';
 import PeoplePage from './PeoplePage';
-import {Input, InputAdornment, Card, CardContent, Typography, CardActions, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Card, CardContent, Typography, TextField, CardActions, Button, FormControl, Select, MenuItem } from '@mui/material';
 
 //child component of EventPage, displaying a single event
 class Event extends React.Component{
@@ -76,32 +76,36 @@ class InputEvent extends React.Component {
   render () {
     return (
       <div id="addEvent" style ={{ display:"inline-block"}}>
-            <Card  sx={{ minWidth: 275, maxWidth:300 }} style={{ margin:20, align:"center" }} variant="outlined">
+            <Card  sx={{ minWidth: 275, maxWidth:300 }} style={{ padding: 15, margin:30, align:"center" }} variant="outlined">
               <CardContent>
                 <Typography variant="h5" component="div">
                   Add New Event
                 </Typography>
                 <FormControl fullWidth>
-                  <InputLabel id="title">Title</InputLabel>
-                  <Input
+                  <TextField
                   required
                   id="title"
+                  label = "Title"
+                  sx = {{m: 2}}
                   value = {this.state.newEvent.title}
                   onChange={this.handleNewTitle}
                        />
                     </FormControl>
                     <FormControl fullWidth>
-                  <InputLabel id="description">Description</InputLabel>
-                  <Input
+                  <TextField
                   required
                   id="description"
+                  sx = {{mx: 2, mt:1}}
+                  multiline = "true"
+                  minRows = "3"
+                  label ="Description"
                   value = {this.state.newEvent.newDescription}
                   onChange={this.handleNewDescription}
                        />
                     </FormControl>
               </CardContent>
               <CardActions style={{justifyContent: 'center'}}>
-                <Button size="small" onClick={this.onAddClick}>Add Event</Button> 
+                <Button size="medium" onClick={this.onAddClick}>Add Event</Button> 
                 {/* must name a seperate click handler this.onAddClick here, because within render cannot call any function, 
                 cannot call this.props.xxx or will get into infinite loop*/}
               </CardActions>
