@@ -206,6 +206,8 @@ class App extends React.Component{
     this.switchUser = this.switchUser.bind(this);
     this.addHandler = this.addHandler.bind(this);
     this.deleteHandler = this.deleteHandler.bind(this);
+    this.handleAddEvent = this.handleAddEvent.bind(this);
+    this.handleDeleteEvent = this.handleDeleteEvent.bind(this);
   }
 
   switchUser(user) {
@@ -231,6 +233,19 @@ class App extends React.Component{
                     
   }
 
+  handleAddEvent(newEvt){
+    this.setState(
+      {events: [...this.state.events, newEvt],
+      NEXT_EVENT_UID: this.state.NEXT_EVENT_UID +1,}    //update the count after a new event added
+    );
+  }
+
+  handleDeleteEvent(eventObj){
+    this.setState(
+      {events: this.state.events.filter(event => event.uid !== eventObj.uid)}
+    );
+  }
+
   render(){
   return (
     <div className="App">
@@ -253,7 +268,13 @@ class App extends React.Component{
         switchUser = {this.switchUser}
         deleteHandler = {this.deleteHandler}
         />
-        <EventsPage />
+        <EventsPage 
+        NEXT_EVENT_UID = {this.state.NEXT_EVENT_UID}
+        currentUser = {this.state.currentUser}
+        events = {this.state.events}
+        onAddEvent = {this.handleAddEvent}
+        onDeleteEvent = {this.handleDeleteEvent}
+        />
         {/* <ul>
           <li>profiles that can be added viewed and deleted</li>
           <li>fake login used to change current user</li>
