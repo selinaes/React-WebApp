@@ -451,7 +451,7 @@ const initialData =  {
               <Profile member={member} events={this.state.events} coinemSpent = { this.calculateUserCoinem(member)} coinemLeft= {this.remainingCoinem(member)} onDelete={() => this.deleteHandler(member.username)}/>
             ))}
                   </div>
-                  <h2 id="events">Events</h2>
+                  {/* <h2 id="events">Events</h2>
           <div>
             {this.state.events.map (event => (
               <div style ={{ display:"inline-block"}}>
@@ -478,9 +478,9 @@ const initialData =  {
             </Card>
             </div>
             ))}
-                  </div> 
+                  </div>  */}
           {adminOnly}
-          
+
           <h2 className="hidden"> Normally Hidden Inputs</h2>
           <p className="hidden">
             <span className="explanation">(Change the .hidden CSS class to hide these)</span></p>
