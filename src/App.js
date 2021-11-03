@@ -271,6 +271,7 @@ class App extends React.Component{
         <EventsPage 
         NEXT_EVENT_UID = {this.state.NEXT_EVENT_UID}
         currentUser = {this.state.currentUser}
+        members = {this.state.members}
         events = {this.state.events}
         onAddEvent = {this.handleAddEvent}
         onDeleteEvent = {this.handleDeleteEvent}

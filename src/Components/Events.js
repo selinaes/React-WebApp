@@ -1,11 +1,75 @@
 import React from 'react'
 import NavBar from './NavBar';
 import PeoplePage from './PeoplePage';
-import { Card, CardContent, Typography, TextField, CardActions, Button, FormControl, Select, MenuItem } from '@mui/material';
+import { Card, CardContent, Chip, Paper, Typography, TextField, CardActions, Button, FormControl, Select, MenuItem } from '@mui/material';
+
+import { styled } from '@mui/material/styles';
+import TagFacesIcon from '@mui/icons-material/TagFaces';
+
+const ListItem = styled('li')(({ theme }) => ({
+  margin: theme.spacing(0.5),
+}));
+
+
+
+export default function ChipsArray() {
+  const [chipData, setChipData] = React.useState([
+    { key: 0, label: 'Angular' },
+    { key: 1, label: 'jQuery' },
+    { key: 2, label: 'Polymer' },
+    { key: 3, label: 'React' },
+    { key: 4, label: 'Vue.js' },
+  ]);
+
+
+
+  const handleDelete = (chipToDelete) => () => {
+    setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
+  };
+
+  return (
+    <Paper
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        flexWrap: 'wrap',
+        listStyle: 'none',
+        p: 0.5,
+        m: 0,
+      }}
+      component="ul"
+    >
+      {chipData.map((data) => {
+        let icon;
+
+        if (data.label === 'React') {
+          icon = <TagFacesIcon />;
+        }
+
+        return (
+          <ListItem key={data.key}>
+            <Chip
+              icon={icon}
+              label={data.label}
+              onDelete={data.label === 'React' ? undefined : handleDelete(data)}
+            />
+          </ListItem>
+        );
+      })}
+    </Paper>
+  );
+}
+
 
 //child component of EventPage, displaying a single event
 class Event extends React.Component{
+  
   render(){
+    let sponsorList = {};
+    let num = this.props.evtObj.uid;
+    this.props.members.map( member => sponsorList[member.username] = member.coinem.num);
+    
+
     return(
       <div style ={{ display:"inline-block"}}>
         <Card sx={{ minWidth: 275, maxWidth:300 }} style={{ margin:20 }} variant="outlined">
@@ -167,14 +231,17 @@ class EventsPage extends React.Component {
           planner = {this.props.currentUser}
           addEvent = {this.onAddEvent}
         />
-          <p>Event</p>
+        <h2 id="events">Events</h2>
+          <div>
             {this.props.events.map(
                 (event) => 
                 <Event 
                 evtObj = {event}
+                members = {this.props.members}
                 onDelete = {() => this.onDeleteEvent(event)}/>)
             }
-        </div>
+          </div>
+      </div>
       {/* <p>{JSON.stringify(this.state)}</p> */}
     </div>
   }
