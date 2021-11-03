@@ -1,11 +1,9 @@
 import sun from './sun-svgrepo-com.svg';
 import './App.css';
 import React from 'react'
-// import Events from './Components/Events';
 import NavBar from './Components/NavBar';
 import PeoplePage from './Components/PeoplePage';
 import {Event,EventsPage, AddEvent} from './Components/Events';
-// import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 const initialData =  {
   "MAX_EVENTS": 3, 
@@ -221,14 +219,10 @@ class App extends React.Component{
   }
 
   deleteHandler(username) {
-    //delete all associated events
     if ((username === this.state.currentUser) || (this.state.currentUser === "admin")){
-     this.setState({members: 
-                     this.state.members
-                      .filter( member => member.username !== username )
-                    });
-                  }
-                
+      this.setState({events: this.state.events.filter(event => event.planner != username)} );
+      this.setState({members:this.state.members.filter(member => member.username !== username)});
+    }            
                   //FIX!!! warn user they are about to delete someone
                     
   }
@@ -242,8 +236,9 @@ class App extends React.Component{
 
   handleDeleteEvent(eventObj){
     this.setState(
-      {events: this.state.events.filter(event => event.uid !== eventObj.uid)}
+      {events: this.state.events.filter(event => event.uid !== eventObj.uid)} 
     );
+    console.log(this.state.events)
   }
 
   render(){
@@ -275,24 +270,6 @@ class App extends React.Component{
         onAddEvent = {this.handleAddEvent}
         onDeleteEvent = {this.handleDeleteEvent}
         />
-        {/* <ul>
-          <li>profiles that can be added viewed and deleted</li>
-          <li>fake login used to change current user</li>
-          <li>members have c coinem to spend on events</li>
-          <li>members can propose up to N events</li>
-          <li>ability to delete events</li>
-          <li>members can update/delete profiles, manage events, (re)allocate coinem</li>
-        </ul> */}
-        {/* <Members /> */}
-        
-        {/* <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a> */}
       <p style={{padding:"5%"}}>joining'em since 2021</p>
     </div>
   );
