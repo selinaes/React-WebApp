@@ -224,6 +224,7 @@ class App extends React.Component{
       this.setState({members:this.state.members.filter(member => member.username !== username)});
     }            
                   //FIX!!! warn user they are about to delete someone
+                  //FIX!!! ALSO REMOVE ASSOCIATED COINEM WHEN YOU DELETE AN EVENT
                     
   }
 
