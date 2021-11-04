@@ -359,9 +359,6 @@ import Profile from "./Profile";
               <Profile member={member} currentUser={this.props.currentUser} events={this.props.events} coinemSpent = { this.calculateUserCoinem(member)} coinemLeft= {this.remainingCoinem(member)} onDelete={() => this.onDeleteUser(member.username)}/>
             ))}
           </div>
-          
-          
-    
         </div>
         );
     }

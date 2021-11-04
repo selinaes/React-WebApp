@@ -206,12 +206,9 @@ class App extends React.Component{
     this.deleteHandler = this.deleteHandler.bind(this);
     this.handleAddEvent = this.handleAddEvent.bind(this);
     this.handleDeleteEvent = this.handleDeleteEvent.bind(this);
-<<<<<<< HEAD
     this.handleAddEvtCoin = this.handleAddEvtCoin.bind(this);
     this.handleMinusEvtCoin = this.handleMinusEvtCoin.bind(this);
-=======
     this.handleDeleteCoinem = this.handleDeleteCoinem.bind(this);
->>>>>>> 8e43ba9ac744843f7045f2e06d16b66b8f67d383
   }
 
   switchUser(user) {
