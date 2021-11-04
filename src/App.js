@@ -252,16 +252,33 @@ class App extends React.Component{
   }
 
   handleAddEvtCoin(uid){
-    // let otherMembers = this.state.members.filter(member => member.username !== this.state.currentUser);
-    // let modifiedMember = this.state.members.filter(member => member.username === this.state.currentUser);
-    // modifiedMember[0].coinem[uid] -=1;
-    // this.setState(
-    //   {members: [...otherMembers, modifiedMember]}
-    // );
+    let otherMembers = this.state.members.filter(member => member.username !== this.state.currentUser);
+    let currentMember = this.state.members.find(member => member.username === this.state.currentUser);
+    let oldCoin = currentMember.coinem[uid];
+    // console.log(oldCoin);
+    let oldCoinem = currentMember.coinem;
+    let modifiedCoinem = {...oldCoinem};
+    modifiedCoinem[uid] = oldCoin+1; //need to prevent increasing over MAX!!
+    // console.log(modifiedCoinem);
+    let newMember = {...currentMember, coinem: modifiedCoinem};
+    this.setState(
+      {members: [...otherMembers, newMember]}
+    );
   }
 
   handleMinusEvtCoin(uid){
-
+    let otherMembers = this.state.members.filter(member => member.username !== this.state.currentUser);
+    let currentMember = this.state.members.find(member => member.username === this.state.currentUser);
+    let oldCoin = currentMember.coinem[uid];
+    // console.log(oldCoin);
+    let oldCoinem = currentMember.coinem;
+    let modifiedCoinem = {...oldCoinem};
+    modifiedCoinem[uid] = oldCoin-1; //need to prevent decreasing lower than 0!!
+    // console.log(modifiedCoinem);
+    let newMember = {...currentMember, coinem: modifiedCoinem};
+    this.setState(
+      {members: [...otherMembers, newMember]}
+    );
   }
 
   render(){
