@@ -132,7 +132,13 @@ import Profile from "./Profile";
                         <MenuItem value="admin">
                           <em>admin</em>
                         </MenuItem>
-                        {this.props.members.map((member) => (
+                        {this.props.members
+                        .sort(function(a, b){
+                          if(a.username < b.username) { return -1; }
+                          if(a.username > b.username) { return 1; }
+                          return 0;
+                      })
+                      .map((member) => (
                           <MenuItem
                             key={member.username}
                             value={member.username}>
@@ -230,7 +236,16 @@ import Profile from "./Profile";
     render(){
       return(
         <div>
-        <div>
+        <Typography variant="h2" component="div">
+         *Admin Only*
+        </Typography>
+        <Typography variant="body1" component="div">
+           MAX_EVENTS: {this.props.MAX_EVENTS} <br/>
+           MAX_COINEM_PER_EVENT: {this.props.MAX_COINEM_PER_EVENT}<br/>
+           MAX_COINEM: {this.props.MAX_COINEM}<br/>
+           NEXT_EVENT_UID: {this.props.NEXT_EVENT_UID}<br/>
+        </Typography>
+        <div style ={{ display:"inline-block"}}>
           <Card sx={{ minWidth: 275, maxWidth:300 }} style={{ margin:20 }} variant="outlined">
           <CardContent>
           <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
@@ -337,14 +352,15 @@ import Profile from "./Profile";
         <div>
           <SwitchUser currentUser={this.props.currentUser} members= {this.props.members} onChange={this.onSwitch}/>
           <AddUser onClick = {this.onAddUser} />
+          {adminOnly}
           <h2 id="members">Members</h2>
           <div>
             {this.props.members.map (member => (
-              <Profile member={member} events={this.props.events} coinemSpent = { this.calculateUserCoinem(member)} coinemLeft= {this.remainingCoinem(member)} onDelete={() => this.onDeleteUser(member.username)}/>
+              <Profile member={member} currentUser={this.props.currentUser} events={this.props.events} coinemSpent = { this.calculateUserCoinem(member)} coinemLeft= {this.remainingCoinem(member)} onDelete={() => this.onDeleteUser(member.username)}/>
             ))}
           </div>
           
-          {adminOnly}
+          
     
         </div>
         );

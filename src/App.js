@@ -206,6 +206,7 @@ class App extends React.Component{
     this.deleteHandler = this.deleteHandler.bind(this);
     this.handleAddEvent = this.handleAddEvent.bind(this);
     this.handleDeleteEvent = this.handleDeleteEvent.bind(this);
+    this.handleDeleteCoinem = this.handleDeleteCoinem.bind(this);
   }
 
   switchUser(user) {
@@ -240,10 +241,12 @@ class App extends React.Component{
   }
 
   handleDeleteEvent(eventObj){
+    if ((eventObj.planner === this.state.currentUser) || (this.state.currentUser === "admin")){
     this.setState(
       {events: this.state.events.filter(event => event.uid !== eventObj.uid)} 
     );
     this.handleDeleteCoinem(eventObj.uid)
+    }
   }
 
   render(){
