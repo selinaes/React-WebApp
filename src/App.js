@@ -220,12 +220,16 @@ class App extends React.Component{
 
   deleteHandler(username) {
     if ((username === this.state.currentUser) || (this.state.currentUser === "admin")){
-      this.setState({events: this.state.events.filter(event => event.planner != username)} );
+      this.state.events.filter(event => event.planner === username).map(event => this.handleDeleteEvent(event))
+      this.setState({events: this.state.events.filter(event => event.planner !== username)} );
       this.setState({members:this.state.members.filter(member => member.username !== username)});
     }            
-                  //FIX!!! warn user they are about to delete someone
-                  //FIX!!! ALSO REMOVE ASSOCIATED COINEM WHEN YOU DELETE AN EVENT
-                    
+                  //FIX!!! warn user they are about to delete someone                    
+  }
+  handleDeleteCoinem(eventId) {
+    this.setState({members: this.state.members.map(member =>
+      delete member.coinem[eventId])
+    })
   }
 
   handleAddEvent(newEvt){
@@ -239,7 +243,7 @@ class App extends React.Component{
     this.setState(
       {events: this.state.events.filter(event => event.uid !== eventObj.uid)} 
     );
-    console.log(this.state.events)
+    this.handleDeleteCoinem(eventObj.uid)
   }
 
   render(){
