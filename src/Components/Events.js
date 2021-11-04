@@ -95,7 +95,7 @@ export default function ChipsArray() {
 
 //child component of EventPage, displaying a single event
 class Event extends React.Component{
-  
+
   render(){
     let sponsorCoins = {};
     let num = this.props.evtObj.uid;
@@ -104,7 +104,7 @@ class Event extends React.Component{
     let sponsors = Object.keys(sponsorCoins);
     let coinems = Object.values(sponsorCoins);
 
-   
+    
 
     return(
       <div style ={{ display:"inline-block"}}>
@@ -132,11 +132,11 @@ class Event extends React.Component{
                   let minusCoin;
                    if (item === this.props.currentUser) {
                     addCoin = 
-                    <IconButton aria-label="add" size="small">
+                    <IconButton aria-label="add" size="small" onClick={()=>this.props.onAddCoin(num)}>
                     <AddCircleOutlineIcon />
                     </IconButton>;
                     minusCoin =
-                    <IconButton aria-label="minus" size="small">
+                    <IconButton aria-label="minus" size="small" onClick={()=>this.props.onMinusCoin(num)}>
                     <RemoveCircleOutlineIcon />
                     </IconButton>;
                   }
@@ -307,7 +307,9 @@ class EventsPage extends React.Component {
                 evtObj = {event}
                 currentUser = {this.props.currentUser}
                 members = {this.props.members}
-                onDelete = {() => this.onDeleteEvent(event)}/>)
+                onDelete = {() => this.onDeleteEvent(event)}
+                onAddCoin = {this.props.onAddEvtCoin}
+                onMinusCoin = {this.props.onMinusEvtCoin}/>)
             }
           </div>
       </div>

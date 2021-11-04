@@ -206,6 +206,8 @@ class App extends React.Component{
     this.deleteHandler = this.deleteHandler.bind(this);
     this.handleAddEvent = this.handleAddEvent.bind(this);
     this.handleDeleteEvent = this.handleDeleteEvent.bind(this);
+    this.handleAddEvtCoin = this.handleAddEvtCoin.bind(this);
+    this.handleMinusEvtCoin = this.handleMinusEvtCoin.bind(this);
   }
 
   switchUser(user) {
@@ -242,6 +244,19 @@ class App extends React.Component{
     console.log(this.state.events)
   }
 
+  handleAddEvtCoin(uid){
+    // let otherMembers = this.state.members.filter(member => member.username !== this.state.currentUser);
+    // let modifiedMember = this.state.members.filter(member => member.username === this.state.currentUser);
+    // modifiedMember[0].coinem[uid] -=1;
+    // this.setState(
+    //   {members: [...otherMembers, modifiedMember]}
+    // );
+  }
+
+  handleMinusEvtCoin(uid){
+
+  }
+
   render(){
   return (
     <div className="App">
@@ -271,11 +286,12 @@ class App extends React.Component{
         events = {this.state.events}
         onAddEvent = {this.handleAddEvent}
         onDeleteEvent = {this.handleDeleteEvent}
+        onAddEvtCoin = {this.handleAddEvtCoin}
+        onMinusEvtCoin = {this.handleMinusEvtCoin}
         />
       <p style={{padding:"5%"}}>joining'em since 2021</p>
     </div>
   );
   }
 }
-
 export default App;
