@@ -68,7 +68,7 @@ class Event extends React.Component{
     let sponsorList = {};
     let num = this.props.evtObj.uid;
     this.props.members.map( member => sponsorList[member.username] = member.coinem.num);
-    
+   
 
     return(
       <div style ={{ display:"inline-block"}}>
@@ -87,7 +87,9 @@ class Event extends React.Component{
             <Typography sx={{ fontSize: 14 }} color="orange" gutterBottom>
                 planner: { this.props.evtObj.planner }
             </Typography>
-        
+            <Typography sx={{ fontSize: 14 }} color="orange" gutterBottom>
+                coinem: { sponsorList }
+            </Typography>
           </CardContent>
             <CardActions style={{justifyContent: 'center'}}>
               <Button size="small" onClick={this.props.onDelete}>Delete Event</Button>
