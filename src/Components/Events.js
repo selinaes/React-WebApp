@@ -1,15 +1,41 @@
 import React from 'react'
 import NavBar from './NavBar';
 import PeoplePage from './PeoplePage';
-import { Card, CardContent, Chip, Paper, Typography, TextField, CardActions, Button, FormControl, Select, MenuItem } from '@mui/material';
+import { Badge, Card, CardContent, Chip, IconButton, Paper, Typography, TextField, CardActions, Button, FormControl, Select, MenuItem } from '@mui/material';
 
-import { styled } from '@mui/material/styles';
-import TagFacesIcon from '@mui/icons-material/TagFaces';
+import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
+import { purple } from '@mui/material/colors';
+
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 const ListItem = styled('li')(({ theme }) => ({
   margin: theme.spacing(0.5),
 }));
 
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#6573c3",
+      dark:"#3f51b5"
+      // dark: will be calculated from palette.primary.main,
+      // contrastText: will be calculated to contrast with palette.primary.main
+    },
+    secondary: {
+      // light: '#0066ff',
+      main: '#99d5cf',
+      // dark: will be calculated from palette.secondary.main,
+      // contrastText: '#ffcc00',
+    },
+    // Used by `getContrastText()` to maximize the contrast between
+    // the background and the text.
+    contrastThreshold: 3,
+    // Used by the functions below to shift a color's luminance by approximately
+    // two indexes within its tonal palette.
+    // E.g., shift from Red 500 to Red 300 or Red 700.
+    tonalOffset: 0.2,
+  },
+});
 
 
 export default function ChipsArray() {
@@ -41,9 +67,16 @@ export default function ChipsArray() {
       {chipData.map((data) => {
         let icon;
 
-        if (data.label === 'React') {
-          icon = <TagFacesIcon />;
-        }
+        // if (data.label === 'React') {
+        //   addCoin = 
+        //   <IconButton aria-label="add">
+        //   <AddCircleOutlineIcon />
+        //   </IconButton>;
+        //   minusCoin =
+        //   <IconButton aria-label="minus">
+        //   <RemoveCircleOutlineIcon />
+        //   </IconButton>;
+        // }
 
         return (
           <ListItem key={data.key}>
@@ -71,8 +104,11 @@ class Event extends React.Component{
     let sponsors = Object.keys(sponsorCoins);
     let coinems = Object.values(sponsorCoins);
 
+   
+
     return(
       <div style ={{ display:"inline-block"}}>
+        <ThemeProvider theme={theme}>
         <Card sx={{ minWidth: 275, maxWidth:300 }} style={{ margin:20 }} variant="outlined">
           <CardContent>
             <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
@@ -88,14 +124,33 @@ class Event extends React.Component{
             <Typography sx={{ fontSize: 14 }} color="orange" gutterBottom>
                 planner: { this.props.evtObj.planner }
             </Typography>
-            <Paper sx={{display: 'flex',justifyContent: 'center',flexWrap: 'wrap',listStyle: 'none',p: 0.5,m: 0,}}
+            <Paper sx={{display: 'flex',justifyContent: 'center',flexWrap: 'wrap',listStyle: 'none',p: 0.5,m: 0}}
                   component="ul" elevation='0'>
           
-                {sponsors.map((item,index) => {return (
+                {sponsors.map((item,index) => {
+                  let addCoin;
+                  let minusCoin;
+                   if (item === this.props.currentUser) {
+                    addCoin = 
+                    <IconButton aria-label="add" size="small">
+                    <AddCircleOutlineIcon />
+                    </IconButton>;
+                    minusCoin =
+                    <IconButton aria-label="minus" size="small">
+                    <RemoveCircleOutlineIcon />
+                    </IconButton>;
+                  }
+                  return (
                     <ListItem key={item}>
+                      {minusCoin}
+                      <Badge badgeContent={coinems[index]} color="secondary">
                       <Chip
-                        label={item+":"+coinems[index]} 
+                        // variant ="outlined"
+                        color="primary"
+                        label={item} 
                       />
+                      </Badge>
+                      {addCoin}
                     </ListItem>
                   );
                 })}    
@@ -105,6 +160,7 @@ class Event extends React.Component{
               <Button size="small" onClick={this.props.onDelete}>Delete Event</Button>
             </CardActions>
           </Card>
+          </ThemeProvider>
       </div>
     );
   }
@@ -249,6 +305,7 @@ class EventsPage extends React.Component {
                 (event) => 
                 <Event 
                 evtObj = {event}
+                currentUser = {this.props.currentUser}
                 members = {this.props.members}
                 onDelete = {() => this.onDeleteEvent(event)}/>)
             }
