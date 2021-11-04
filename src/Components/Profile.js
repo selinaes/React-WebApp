@@ -2,6 +2,7 @@ import React from 'react'
 import {Card, CardContent, Typography, CardActions, Button } from '@mui/material';
 
 const Profile = props => (
+
   <div style ={{ display:"inline-block"}}>
   <Card sx={{ width:300, height:225 }} style={{ margin:20 }} variant="outlined">
   <CardContent>
@@ -20,6 +21,7 @@ const Profile = props => (
     </Typography>
 
   </CardContent>
+  {/* {if currentUser==props.member.username} */}
   <CardActions style={{justifyContent: 'center'}}>
     <Button size="small" onClick={props.onDelete}>Delete User</Button>
   </CardActions>
