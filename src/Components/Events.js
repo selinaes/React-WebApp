@@ -156,9 +156,12 @@ class Event extends React.Component{
                 })}    
             </Paper>
           </CardContent>
-            <CardActions style={{justifyContent: 'center'}}>
-              <Button size="small" onClick={this.props.onDelete}>Delete Event</Button>
-            </CardActions>
+          {(this.props.currentUser===this.props.evtObj.planner || this.props.currentUser === 'admin')
+        ? <CardActions style={{justifyContent: 'center'}}>
+          <Button size="small" onClick={this.props.onDelete}>Delete Event</Button>
+          </CardActions>
+        : <br />
+      }
           </Card>
           </ThemeProvider>
       </div>

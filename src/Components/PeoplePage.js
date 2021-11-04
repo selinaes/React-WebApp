@@ -332,8 +332,8 @@ import Profile from "./Profile";
 
     calculateUserCoinem(member) {
       return Object.values(member.coinem).reduce((n,sum)=>n+sum, 0)
-      
     }
+
     remainingCoinem(member){
       return this.props.MAX_COINEM - this.calculateUserCoinem(member)
     }
@@ -355,8 +355,13 @@ import Profile from "./Profile";
           {adminOnly}
           <h2 id="members">Members</h2>
           <div>
-            {this.props.members.map (member => (
-              <Profile member={member} currentUser={this.props.currentUser} events={this.props.events} coinemSpent = { this.calculateUserCoinem(member)} coinemLeft= {this.remainingCoinem(member)} onDelete={() => this.onDeleteUser(member.username)}/>
+            {this.props.members.map(member => 
+            (<Profile member={member}
+              currentUser={this.props.currentUser}
+              events={this.props.events}
+              coinemSpent = { this.calculateUserCoinem(member)}
+              coinemLeft= {this.remainingCoinem(member)}
+              onDelete={() => this.onDeleteUser(member.username)}/>
             ))}
           </div>
         </div>

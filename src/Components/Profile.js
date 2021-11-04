@@ -21,10 +21,12 @@ const Profile = props => (
     </Typography>
 
   </CardContent>
-  {/* {if currentUser==props.member.username} */}
-  <CardActions style={{justifyContent: 'center'}}>
-    <Button size="small" onClick={props.onDelete}>Delete User</Button>
-  </CardActions>
+  {(props.currentUser===props.member.username || props.currentUser === 'admin')
+        ? <CardActions style={{justifyContent: 'center'}}>
+          <Button size="small" onClick={props.onDelete}>Delete User</Button>
+          </CardActions>
+        : <br />
+      }
 </Card>
 </div>
 )
