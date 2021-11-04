@@ -22,7 +22,6 @@ export default function ChipsArray() {
   ]);
 
 
-
   const handleDelete = (chipToDelete) => () => {
     setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
   };
@@ -65,10 +64,12 @@ export default function ChipsArray() {
 class Event extends React.Component{
   
   render(){
-    let sponsorList = {};
+    let sponsorCoins = {};
     let num = this.props.evtObj.uid;
-    this.props.members.map( member => sponsorList[member.username] = member.coinem.num);
-   
+    let sponsorsList = this.props.members.filter(member => member.coinem[num] !== undefined);
+    sponsorsList.map( member => sponsorCoins[member.username] = member.coinem[num]);
+    let sponsors = Object.keys(sponsorCoins);
+    let coinems = Object.values(sponsorCoins);
 
     return(
       <div style ={{ display:"inline-block"}}>
@@ -87,9 +88,18 @@ class Event extends React.Component{
             <Typography sx={{ fontSize: 14 }} color="orange" gutterBottom>
                 planner: { this.props.evtObj.planner }
             </Typography>
-            <Typography sx={{ fontSize: 14 }} color="orange" gutterBottom>
-                coinem: { sponsorList }
-            </Typography>
+            <Paper sx={{display: 'flex',justifyContent: 'center',flexWrap: 'wrap',listStyle: 'none',p: 0.5,m: 0,}}
+                  component="ul" elevation='0'>
+          
+                {sponsors.map((item,index) => {return (
+                    <ListItem key={item}>
+                      <Chip
+                        label={item+":"+coinems[index]} 
+                      />
+                    </ListItem>
+                  );
+                })}    
+            </Paper>
           </CardContent>
             <CardActions style={{justifyContent: 'center'}}>
               <Button size="small" onClick={this.props.onDelete}>Delete Event</Button>
