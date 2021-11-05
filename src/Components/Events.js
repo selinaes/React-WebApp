@@ -313,7 +313,6 @@ class EventsPage extends React.Component {
             }
           </div>
       </div>
-      {/* <p>{JSON.stringify(this.state)}</p> */}
     </div>
   }
 }

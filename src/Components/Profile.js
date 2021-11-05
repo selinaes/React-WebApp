@@ -23,7 +23,7 @@ const Profile = props => (
   </CardContent>
   {(props.currentUser===props.member.username || props.currentUser === 'admin')
         ? <CardActions style={{justifyContent: 'center'}}>
-          <AlertDialog onDelete/> 
+          <AlertDialog onDelete={props.onDelete}/> 
           </CardActions>
         : <br />
       }

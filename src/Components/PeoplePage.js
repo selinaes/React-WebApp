@@ -157,153 +157,7 @@ import Profile from "./Profile";
 
 
 
-  class FileUploadDownload extends React.Component {
-    constructor(props) {
-      super(props)
   
-      this.state = {
-        fileDownloadUrl: null,
-        fileInfo: "",
-        fileName: "joinem.json",
-      }
-      this.downloadHandler = this.downloadHandler.bind(this);
-      this.uploadHandler = this.uploadHandler.bind(this);
-      this.openFileHandler = this.openFileHandler.bind(this);
-      this.handleNewFilename = this.handleNewFilename.bind(this);
-    }
-
-    downloadHandler (event) {
-      event.preventDefault(); // Prevent default actions of event                   
-      // Prepare the file 
-      
-      let dataObject = {"members": this.props.members}//FIX! MUST ADD ALL RELEVANT DATA!!!!!
-      let output = JSON.stringify(dataObject, null, 4);
-  
-      // Download it            
-      const blob = new Blob([output]);
-      const fileDownloadUrl = URL.createObjectURL(blob);
-      console.log(fileDownloadUrl)
-      this.setState ({fileDownloadUrl: fileDownloadUrl},
-        // setState takes a callback function as an optional 2nd argument.          
-        // It is called only after the state has been updated.                       
-        () => {
-          this.domFileDownload.click();
-          URL.revokeObjectURL(fileDownloadUrl);  // free up storage--no longer needed.       
-          this.setState({fileDownloadUrl: ""})
-      })
-    }
-    
-    uploadHandler(event) {
-      event.preventDefault();
-      this.domFileUpload.click() // This will browse for a file to upload 
-                                 // and then call the openFileHandler from 
-                                 // the input component's onChange handler.      
-    }
-
-    /**  
-     * Process the uploaded file within the React app.
-     */
-
-     handleNewFilename(event) {
-      event.preventDefault();
-      let name = event.target.value + ".json";
-      this.setState ({fileName: name});
-    }
-
-    openFileHandler(event) {
-        let fileInfoList = []; // Status output 
-        const fileObj = event.target.files[0]; // From automated .click() on file input component
-        const reader = new FileReader();
-  
-        let fileLoadedHandler = e => {
-          // e.target.result is the file's content as text 
-          const fileContents = e.target.result;
-          fileInfoList.push(`File name: "${fileObj.name}". Length: ${fileContents.length} bytes.`);
-          fileInfoList.push (`File contents: ${fileContents}`)
-          const jsonData= JSON.parse(fileContents);
-          const memberList = jsonData.members;
-          //FIX! MUST ADD ALL RELEVANT DATA!!!!!
-          this.setState ({fileInfo: fileInfoList.join("\n")});
-          this.setState ({members: memberList});
-        }
-  
-        // Mainline of the method 
-        fileLoadedHandler= fileLoadedHandler.bind(this);
-        reader.onload = fileLoadedHandler;
-        reader.readAsText(fileObj);
-    }
-
-    render(){
-      return(
-        <div>
-        <Typography variant="h2" component="div">
-         *Admin Only*
-        </Typography>
-        <Typography variant="body1" component="div">
-           MAX_EVENTS: {this.props.MAX_EVENTS} <br/>
-           MAX_COINEM_PER_EVENT: {this.props.MAX_COINEM_PER_EVENT}<br/>
-           MAX_COINEM: {this.props.MAX_COINEM}<br/>
-           NEXT_EVENT_UID: {this.props.NEXT_EVENT_UID}<br/>
-        </Typography>
-        <div style ={{ display:"inline-block"}}>
-          <Card sx={{ minWidth: 275, maxWidth:300 }} style={{ margin:20 }} variant="outlined">
-          <CardContent>
-          <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          File Upload/Download
-          </Typography>
-          <Typography variant="body2">
-          Name of File to Download
-          <FormControl fullWidth>
-          <InputLabel id="filename">file name</InputLabel>
-          <Input
-          required
-          id="filename"
-          onChange={this.handleNewFilename}
-               />
-            </FormControl>.json
-          </Typography>
-          <Typography sx={{ fontSize: 14 }} color="orange" gutterBottom>
-     
-          </Typography>
-        </CardContent>
-        <CardActions style={{justifyContent: 'center'}}>
-        <Button size="small" onClick={this.downloadHandler}>Download file as {this.state.fileName} </Button>
-        <Button size="small" onClick={this.uploadHandler}>Upload a file!</Button>
-        </CardActions>
-        </Card> 
-    </div>
-
-    <h2 className="hidden"> Normally Hidden Inputs</h2>
-    <p className="hidden">
-      <span className="explanation">(Change the .hidden CSS class to hide these)</span></p>
-    <input type="file"
-          className="hidden"                                                                   
-        multiple={false}
-        accept=".json, application/json" // Only upload JSON files                              
-        onChange={evt => this.openFileHandler(evt)}
-        ref={
-          // This is so-called "callback ref" that captures the associated
-          // DOM element on rendering.
-          // See https://reactjs.org/docs/refs-and-the-dom.html 
-          domElt => this.domFileUpload = domElt
-        }
-      />
-      <a className="hidden" 
-        download={this.state.fileName} // download attribute specifies file name                                        // to download to when clicking link 
-         href={this.state.fileDownloadUrl}
-         ref={
-          // This is so-called "callback ref" that captures the associated 
-          // DOM element on rendering.
-          // See https://reactjs.org/docs/refs-and-the-dom.html
-          domElt => this.domFileDownload = domElt
-        }
-      > download it</a>
-    <h2 className="hidden">File Data</h2>
-    <pre className="status">{this.state.fileInfo}</pre>
-    </div>
-    );
-    }
-  }
 
 
   class PeoplePage extends React.Component {
@@ -344,15 +198,15 @@ import Profile from "./Profile";
     }
 
     render() {
-      let adminOnly;
-      if (this.props.currentUser === "admin") {
-          adminOnly = <FileUploadDownload NEXT_EVENT_UID= {this.props.NEXT_EVENT_UID} MAX_COINEM= {this.props.MAX_COINEM} MAX_COINEM_PER_EVENT= {this.props.MAX_COINEM_PER_EVENT} MAX_EVENTS= {this.props.MAX_EVENTS} members={this.props.members} />;}
+      // let adminOnly;
+      // if (this.props.currentUser === "admin") {
+      //     adminOnly = <FileUploadDownload NEXT_EVENT_UID= {this.props.NEXT_EVENT_UID} MAX_COINEM= {this.props.MAX_COINEM} MAX_COINEM_PER_EVENT= {this.props.MAX_COINEM_PER_EVENT} MAX_EVENTS= {this.props.MAX_EVENTS} members={this.props.members} />;}
 
       return (
         <div>
           <SwitchUser currentUser={this.props.currentUser} members= {this.props.members} onChange={this.onSwitch}/>
           <AddUser onClick = {this.onAddUser} />
-          {adminOnly}
+          {/* {adminOnly} */}
           <h2 id="members">Members</h2>
           <div>
             {this.props.members.map(member => 
