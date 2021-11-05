@@ -1,6 +1,5 @@
 import React from 'react'
-import NavBar from './NavBar';
-import PeoplePage from './PeoplePage';
+import AlertDialog from './Delete';
 import { Badge, Card, CardContent, Chip, IconButton, Paper, Typography, TextField, CardActions, Button, FormControl, Select, MenuItem } from '@mui/material';
 
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
@@ -104,8 +103,6 @@ class Event extends React.Component{
     let sponsors = Object.keys(sponsorCoinsPair);
     let coinems = Object.values(sponsorCoinsPair);
 
-    
-
     return(
       <div style ={{ display:"inline-block"}}>
         <ThemeProvider theme={theme}>
@@ -158,7 +155,7 @@ class Event extends React.Component{
           </CardContent>
           {(this.props.currentUser===this.props.evtObj.planner || this.props.currentUser === 'admin')
         ? <CardActions style={{justifyContent: 'center'}}>
-          <Button size="small" onClick={this.props.onDelete}>Delete Event</Button>
+                   <AlertDialog onDelete={this.props.onDelete} /> 
           </CardActions>
         : <br />
       }
