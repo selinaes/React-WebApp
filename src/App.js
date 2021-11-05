@@ -4,7 +4,7 @@ import React from 'react'
 import NavBar from './Components/NavBar';
 import PeoplePage from './Components/PeoplePage';
 import {EventsPage} from './Components/Events';
-import {Input, Card, CardContent, Typography, CardActions, Button, FormControl, InputLabel } from '@mui/material';
+import {Input, Box, Card, CardContent, Typography, TextField, CardActions, Button, FormControl, InputLabel } from '@mui/material';
 
 
 const initialData =  {
@@ -217,6 +217,9 @@ class App extends React.Component{
     this.uploadHandler = this.uploadHandler.bind(this);
     this.openFileHandler = this.openFileHandler.bind(this);
     this.handleNewFilename = this.handleNewFilename.bind(this);
+    this.handleChangeMAX_EVENT = this.handleChangeMAX_EVENT.bind(this);
+    this.handleChangeMAX_COINEM_PER_EVENT = this.handleChangeMAX_COINEM_PER_EVENT.bind(this);
+    this.handleChangeMAX_COINEM = this.handleChangeMAX_COINEM.bind(this);
   }
 
   switchUser(user) {
@@ -334,7 +337,7 @@ class App extends React.Component{
    * Process the uploaded file within the React app.
    */
 
-   handleNewFilename(event) {
+  handleNewFilename(event) {
     event.preventDefault();
     let name = event.target.value + ".json";
     this.setState ({fileName: name});
@@ -374,6 +377,27 @@ class App extends React.Component{
       reader.readAsText(fileObj);
     }
 
+  handleChangeMAX_EVENT(event){
+    event.preventDefault();
+    this.setState(
+      {MAX_EVENTS: event.target.value}
+    );
+  }
+
+  handleChangeMAX_COINEM_PER_EVENT(event){
+    event.preventDefault();
+    this.setState(
+      {MAX_COINEM_PER_EVENT: event.target.value}
+    );
+  }
+
+  handleChangeMAX_COINEM(event){
+    event.preventDefault();
+    this.setState(
+      {MAX_COINEM: event.target.value}
+    );
+  }
+
   render(){
   return (
     <div className="App">
@@ -392,10 +416,57 @@ class App extends React.Component{
          *Admin Only*
         </Typography>
         <Typography variant="body1" component="div">
-           MAX_EVENTS: {this.state.MAX_EVENTS} <br/>
-           MAX_COINEM_PER_EVENT: {this.state.MAX_COINEM_PER_EVENT}<br/>
-           MAX_COINEM: {this.state.MAX_COINEM}<br/>
-           NEXT_EVENT_UID: {this.state.NEXT_EVENT_UID}<br/>
+        <Box
+        component="form"
+        sx={{
+        '& .MuiTextField-root': { m: 1, width: '25ch' },
+        }}
+        noValidate
+        autoComplete="off"
+        >
+        <TextField
+          id="max-events"
+          label="MAX_EVENTS"
+          value={this.state.MAX_EVENTS} 
+          type="number"
+          InputLabelProps={{
+            shrink: true,
+          }}
+          variant="standard"
+          onChange={this.handleChangeMAX_EVENT}
+        /><br/>
+           <TextField
+          id="max-coinem-per-event"
+          label="MAX_COINEM_PER_EVENT"
+          value={this.state.MAX_COINEM_PER_EVENT} 
+          type="number"
+          InputLabelProps={{
+            shrink: true,
+          }}
+          variant="standard"
+          onChange={this.handleChangeMAX_COINEM_PER_EVENT}
+        /><br/>
+           <TextField
+          id="max-coinem"
+          label="MAX_COINEM"
+          value={this.state.MAX_COINEM} 
+          type="number"
+          InputLabelProps={{
+            shrink: true,
+          }}
+          variant="standard"
+          onChange={this.handleChangeMAX_COINEM}
+        /><br/>
+           <TextField
+          id="next-event-uid"
+          label="NEXT_EVENT_UID"
+          value={this.state.NEXT_EVENT_UID}
+          InputProps={{
+            readOnly: true,
+          }}
+          variant="standard"
+        /><br/>
+        </Box>
         </Typography>
         <div style ={{ display:"inline-block"}}>
           <Card sx={{ minWidth: 275, maxWidth:300 }} style={{ margin:20 }} variant="outlined">
