@@ -1,5 +1,5 @@
 import React from 'react'
-import {Card, CardContent, Typography, CardActions, Button } from '@mui/material';
+import {Card, CardContent, Typography, CardActions} from '@mui/material';
 import AlertDialog from './Delete';
 const Profile = props => (
 
@@ -23,7 +23,7 @@ const Profile = props => (
   </CardContent>
   {(props.currentUser===props.member.username || props.currentUser === 'admin')
         ? <CardActions style={{justifyContent: 'center'}}>
-          <AlertDialog onDelete/> 
+          <AlertDialog onDelete={props.onDelete}/> 
           </CardActions>
         : <br />
       }

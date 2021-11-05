@@ -16,11 +16,7 @@ export default function AlertDialog(props) {
     const handleClose = () => {
       setOpen(false);
     };
-    const deleteAndClose = () => {
-      
-      handleClose();
-    }
-  
+
     return (
       <div>
         <Button variant="outlined" onClick={handleClickOpen}>
@@ -44,7 +40,7 @@ export default function AlertDialog(props) {
             <Button onClick={handleClose}>Cancel</Button>
             <Button onClick=
             {() => {
-                {props.onDelete()};
+                props.onDelete();
                 handleClose();
               }} autoFocus>
               Delete

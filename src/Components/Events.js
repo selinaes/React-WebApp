@@ -1,9 +1,8 @@
 import React from 'react'
 import AlertDialog from './Delete';
-import { Badge, Card, CardContent, Chip, IconButton, Paper, Typography, TextField, CardActions, Button, FormControl, Select, MenuItem } from '@mui/material';
+import { Badge, Card, CardContent, Chip, IconButton, Paper, Typography, TextField, CardActions, Button, FormControl } from '@mui/material';
 
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
-import { purple } from '@mui/material/colors';
 
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -207,21 +206,6 @@ class InputEvent extends React.Component {
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //parent component for all of the Events + AddEvent
 class EventsPage extends React.Component {
     
@@ -263,7 +247,6 @@ class EventsPage extends React.Component {
             }
           </div>
       </div>
-      {/* <p>{JSON.stringify(this.state)}</p> */}
     </div>
   }
 }
