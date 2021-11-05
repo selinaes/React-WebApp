@@ -97,12 +97,12 @@ export default function ChipsArray() {
 class Event extends React.Component{
 
   render(){
-    let sponsorCoins = {};
+    let sponsorCoinsPair = {};
     let num = this.props.evtObj.uid;
     let sponsorsList = this.props.members.filter(member => member.coinem[num] !== undefined);
-    sponsorsList.map( member => sponsorCoins[member.username] = member.coinem[num]);
-    let sponsors = Object.keys(sponsorCoins);
-    let coinems = Object.values(sponsorCoins);
+    sponsorsList.map( member => sponsorCoinsPair[member.username] = member.coinem[num]);
+    let sponsors = Object.keys(sponsorCoinsPair);
+    let coinems = Object.values(sponsorCoinsPair);
 
     
 
