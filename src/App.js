@@ -3,7 +3,7 @@ import './App.css';
 import React from 'react'
 import NavBar from './Components/NavBar';
 import PeoplePage from './Components/PeoplePage';
-import {Event,EventsPage, AddEvent} from './Components/Events';
+import {EventsPage} from './Components/Events';
 import {Input, Card, CardContent, Typography, CardActions, Button, FormControl, InputLabel } from '@mui/material';
 
 
@@ -213,7 +213,6 @@ class App extends React.Component{
     this.handleDeleteEvent = this.handleDeleteEvent.bind(this);
     this.handleAddEvtCoin = this.handleAddEvtCoin.bind(this);
     this.handleMinusEvtCoin = this.handleMinusEvtCoin.bind(this);
-    this.handleDeleteCoinem = this.handleDeleteCoinem.bind(this);
     this.downloadHandler = this.downloadHandler.bind(this);
     this.uploadHandler = this.uploadHandler.bind(this);
     this.openFileHandler = this.openFileHandler.bind(this);
@@ -232,31 +231,37 @@ class App extends React.Component{
 
   deleteHandler(username) {
     if ((username === this.state.currentUser) || (this.state.currentUser === "admin")){
-      this.state.events.filter(event => event.planner === username).map(event => this.handleDeleteEvent(event))
-      this.setState({events: this.state.events.filter(event => event.planner !== username)} );
-      this.setState({members:this.state.members.filter(member => member.username !== username)});
+      let newEvents = [...this.state.events];
+      let newMembers = [...this.state.members];
+      this.state.events.filter(event => event.planner === username).forEach(event => this.handleDeleteCoinem(event.uid));
+      this.setState({
+        events: newEvents.filter(event => event.planner !== username),
+        members: newMembers.filter(member => member.username !== username)});
     }            
                   //FIX!!! warn user they are about to delete someone                    
   }
-  handleDeleteCoinem(eventId) {
-    this.setState({members: this.state.members.map(member =>
-      delete member.coinem[eventId])
-    })
-  }
 
   handleAddEvent(newEvt){
+    let prevUID = this.state.NEXT_EVENT_UID;
     this.setState(
       {events: [...this.state.events, newEvt],
-      NEXT_EVENT_UID: this.state.NEXT_EVENT_UID +1,}    //update the count after a new event added
+      NEXT_EVENT_UID: prevUID +1,}    //update the count after a new event added
     );
   }
 
   handleDeleteEvent(eventObj){
     if ((eventObj.planner === this.state.currentUser) || (this.state.currentUser === "admin")){
+    let newEvents = [...this.state.events];
+    let newMembers = this.state.members.map(member => {
+      let pairs = Object.entries(member.coinem);
+      pairs.filter(pair => pair[0]!==eventObj.uid);
+      let newCoinem = Object.fromEntries(pairs);
+      return {...member, coinem: newCoinem}});
     this.setState(
-      {events: this.state.events.filter(event => event.uid !== eventObj.uid)} 
+      {events: newEvents.filter(event => event.uid !== eventObj.uid),
+       members: newMembers
+      } //remove the event from events list
     );
-    this.handleDeleteCoinem(eventObj.uid)
     }
   }
 
@@ -274,6 +279,7 @@ class App extends React.Component{
       {members: [...otherMembers, newMember]}
     );
   }
+
 
   handleMinusEvtCoin(uid){
     let otherMembers = this.state.members.filter(member => member.username !== this.state.currentUser);

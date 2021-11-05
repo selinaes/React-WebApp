@@ -1,9 +1,8 @@
 import React from 'react'
 import AlertDialog from './Delete';
-import { Badge, Card, CardContent, Chip, IconButton, Paper, Typography, TextField, CardActions, Button, FormControl, Select, MenuItem } from '@mui/material';
+import { Badge, Card, CardContent, Chip, IconButton, Paper, Typography, TextField, CardActions, Button, FormControl } from '@mui/material';
 
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
-import { purple } from '@mui/material/colors';
 
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -96,12 +95,12 @@ export default function ChipsArray() {
 class Event extends React.Component{
 
   render(){
-    let sponsorCoins = {};
+    let sponsorCoinsPair = {};
     let num = this.props.evtObj.uid;
     let sponsorsList = this.props.members.filter(member => member.coinem[num] !== undefined);
-    sponsorsList.map( member => sponsorCoins[member.username] = member.coinem[num]);
-    let sponsors = Object.keys(sponsorCoins);
-    let coinems = Object.values(sponsorCoins);
+    sponsorsList.map( member => sponsorCoinsPair[member.username] = member.coinem[num]);
+    let sponsors = Object.keys(sponsorCoinsPair);
+    let coinems = Object.values(sponsorCoinsPair);
 
     return(
       <div style ={{ display:"inline-block"}}>
@@ -256,21 +255,6 @@ class InputEvent extends React.Component {
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //parent component for all of the Events + AddEvent
 class EventsPage extends React.Component {

@@ -3,7 +3,6 @@ import {Input, InputAdornment, Card, CardContent, Typography, CardActions, Butto
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Profile from "./Profile";
 
-
   class AddUser extends React.Component {
     constructor(props){
       super(props);
@@ -95,8 +94,6 @@ import Profile from "./Profile";
       );
     }
   }
-
-
   class SwitchUser extends React.Component {
     constructor(props){
       super(props);
@@ -153,13 +150,6 @@ import Profile from "./Profile";
       );
     }
   }
-
-
-
-
-  
-
-
   class PeoplePage extends React.Component {
     constructor(props) {
       super(props);
@@ -198,10 +188,6 @@ import Profile from "./Profile";
     }
 
     render() {
-      // let adminOnly;
-      // if (this.props.currentUser === "admin") {
-      //     adminOnly = <FileUploadDownload NEXT_EVENT_UID= {this.props.NEXT_EVENT_UID} MAX_COINEM= {this.props.MAX_COINEM} MAX_COINEM_PER_EVENT= {this.props.MAX_COINEM_PER_EVENT} MAX_EVENTS= {this.props.MAX_EVENTS} members={this.props.members} />;}
-
       return (
         <div>
           <SwitchUser currentUser={this.props.currentUser} members= {this.props.members} onChange={this.onSwitch}/>
