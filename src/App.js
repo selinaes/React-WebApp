@@ -11,7 +11,7 @@ const initialData =  {
   "MAX_EVENTS": 3, 
   "MAX_COINEM_PER_EVENT": 5, 
   "MAX_COINEM": 20, 
-  "NEXT_EVENT_UID": 13, 
+  "NEXT_EVENT_UID": 15, 
   
   "members":
     [
