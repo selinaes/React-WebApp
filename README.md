@@ -12,7 +12,7 @@ keeping all info in one place & using states to manage them
 deep vs shallow copying
 passing handlers as props
 Object.value/Object.key and reducing
-### 
+### Checking here if authentication works
 
 
 
