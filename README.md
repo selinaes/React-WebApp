@@ -7,7 +7,8 @@ Decision to break up code into components in order to make it easier to understa
 ### Security through Conditional Rendering
 Preventing regular users from having priviledges of an admin and ability to add or delete events/users that are not their own
 ### State and Props
-when we chose to use state (eg App.js) and when we chose to use props
+when we chose to use state (eg App.js) and when we chose to use propsng 
+keeping all info in one place & using states to manage them
 deep vs shallow copying
 passing handlers as props
 Object.value/Object.key and reducing
