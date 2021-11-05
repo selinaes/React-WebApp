@@ -7,6 +7,8 @@ import { purple } from '@mui/material/colors';
 
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import FaceIcon from '@mui/icons-material/Face';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 
 const ListItem = styled('li')(({ theme }) => ({
   margin: theme.spacing(0.5),
@@ -37,61 +39,6 @@ const theme = createTheme({
 });
 
 
-export default function ChipsArray() {
-  const [chipData, setChipData] = React.useState([
-    { key: 0, label: 'Angular' },
-    { key: 1, label: 'jQuery' },
-    { key: 2, label: 'Polymer' },
-    { key: 3, label: 'React' },
-    { key: 4, label: 'Vue.js' },
-  ]);
-
-
-  const handleDelete = (chipToDelete) => () => {
-    setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
-  };
-
-  return (
-    <Paper
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        flexWrap: 'wrap',
-        listStyle: 'none',
-        p: 0.5,
-        m: 0,
-      }}
-      component="ul"
-    >
-      {chipData.map((data) => {
-        let icon;
-
-        // if (data.label === 'React') {
-        //   addCoin = 
-        //   <IconButton aria-label="add">
-        //   <AddCircleOutlineIcon />
-        //   </IconButton>;
-        //   minusCoin =
-        //   <IconButton aria-label="minus">
-        //   <RemoveCircleOutlineIcon />
-        //   </IconButton>;
-        // }
-
-        return (
-          <ListItem key={data.key}>
-            <Chip
-              icon={icon}
-              label={data.label}
-              onDelete={data.label === 'React' ? undefined : handleDelete(data)}
-            />
-          </ListItem>
-        );
-      })}
-    </Paper>
-  );
-}
-
-
 //child component of EventPage, displaying a single event
 class Event extends React.Component{
 
@@ -102,6 +49,8 @@ class Event extends React.Component{
     sponsorsList.map( member => sponsorCoinsPair[member.username] = member.coinem[num]);
     let sponsors = Object.keys(sponsorCoinsPair);
     let coinems = Object.values(sponsorCoinsPair);
+    let totalMembers = sponsors.length;
+    let totalCoinems = coinems.reduce((n,sum)=>n+sum,0)
 
     return(
       <div style ={{ display:"inline-block"}}>
@@ -114,12 +63,13 @@ class Event extends React.Component{
             <Typography variant="h5" component="div">
                   {this.props.evtObj.title}
             </Typography>
-                
+            <Chip sx={{ m: 0.5 }} icon={<FaceIcon />} label={totalMembers+" Members"} variant="outlined" />
+            <Chip sx={{ m: 0.5 }}icon={<MonetizationOnIcon />} label={totalCoinems+" Coinems"} variant="outlined" />
             <Typography variant="body2">
                 { this.props.evtObj.description }
             </Typography>
-            <Typography sx={{ fontSize: 14 }} color="orange" gutterBottom>
-                planner: { this.props.evtObj.planner }
+            <Typography sx={{ fontSize: 16 }} color="orange" gutterBottom>
+                Planner: { this.props.evtObj.planner }
             </Typography>
             <Paper sx={{display: 'flex',justifyContent: 'center',flexWrap: 'wrap',listStyle: 'none',p: 0.5,m: 0}}
                   component="ul" elevation='0'>
