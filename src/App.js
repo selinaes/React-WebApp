@@ -293,6 +293,7 @@ class App extends React.Component{
         </h1>
         <p><em>Events. Plan'em. Join'em!</em></p>
         <PeoplePage 
+        NEXT_EVENT_UID = {this.state.NEXT_EVENT_UID}
         MAX_EVENTS = {this.state.MAX_EVENTS}
         MAX_COINEM_PER_EVENT = {this.state.MAX_COINEM_PER_EVENT}
         MAX_COINEM = {this.state.MAX_COINEM}

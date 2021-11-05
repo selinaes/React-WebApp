@@ -1,8 +1,6 @@
 import React from 'react'
 import {Card, CardContent, Typography, CardActions, Button } from '@mui/material';
 import AlertDialog from './Delete';
-
-
 const Profile = props => (
 
   <div style ={{ display:"inline-block"}}>

@@ -346,7 +346,7 @@ import Profile from "./Profile";
     render() {
       let adminOnly;
       if (this.props.currentUser === "admin") {
-          adminOnly = <FileUploadDownload members={this.props.members} />;}
+          adminOnly = <FileUploadDownload NEXT_EVENT_UID= {this.props.NEXT_EVENT_UID} MAX_COINEM= {this.props.MAX_COINEM} MAX_COINEM_PER_EVENT= {this.props.MAX_COINEM_PER_EVENT} MAX_EVENTS= {this.props.MAX_EVENTS} members={this.props.members} />;}
 
       return (
         <div>
