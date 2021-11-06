@@ -259,7 +259,9 @@ class App extends React.Component{
         events: newEvents,
         members: newMembers });
     }            
-                  //FIX!!! warn user they are about to delete someone                    
+    if (username === this.state.currentUser){
+      this.setState({currentUser: 'admin'})
+    }                  
   }
 
   handleAddEvent(newEvt){
