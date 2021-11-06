@@ -157,7 +157,7 @@ import Profile from "./Profile";
       this.onAddUser = this.onAddUser.bind(this);
       this.onDeleteUser = this.onDeleteUser.bind(this);
       this.onSwitch = this.onSwitch.bind(this);
-      this.calculateEventCoinem = this.calculateEventCoinem.bind(this);
+      // this.calculateEventCoinem = this.calculateEventCoinem.bind(this);
       this.remainingCoinem = this.remainingCoinem.bind(this);
       
     }
@@ -182,10 +182,10 @@ import Profile from "./Profile";
       return this.props.MAX_COINEM - this.calculateUserCoinem(member)
     }
 
-    calculateEventCoinem(uid) {
-      // from list of members, select member with username, then get their coinem list and add key values
+    // remainingEvents(member) {
+    //   // from list of members, select member with username, then get their coinem list and add key values
       
-    }
+    // }
 
     render() {
       return (
@@ -201,7 +201,8 @@ import Profile from "./Profile";
               events={this.props.events}
               coinemSpent = { this.calculateUserCoinem(member)}
               coinemLeft= {this.remainingCoinem(member)}
-              onDelete={() => this.onDeleteUser(member.username)}/>
+              onDelete={() => this.onDeleteUser(member.username)}
+              MAX_EVENTS = {this.props.MAX_EVENTS}/>
             ))}
           </div>
         </div>
