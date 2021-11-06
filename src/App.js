@@ -4,14 +4,14 @@ import React from 'react'
 import NavBar from './Components/NavBar';
 import PeoplePage from './Components/PeoplePage';
 import {EventsPage} from './Components/Events';
-import {Input, Card, CardContent, Typography, CardActions, Button, FormControl, InputLabel } from '@mui/material';
+import {Input, Box, Card, CardContent, Typography, TextField, CardActions, Button, FormControl, InputLabel } from '@mui/material';
 
 
 const initialData =  {
   "MAX_EVENTS": 3, 
   "MAX_COINEM_PER_EVENT": 5, 
   "MAX_COINEM": 20, 
-  "NEXT_EVENT_UID": 13, 
+  "NEXT_EVENT_UID": 15, 
   
   "members":
     [
@@ -217,6 +217,9 @@ class App extends React.Component{
     this.uploadHandler = this.uploadHandler.bind(this);
     this.openFileHandler = this.openFileHandler.bind(this);
     this.handleNewFilename = this.handleNewFilename.bind(this);
+    this.handleChangeMAX_EVENT = this.handleChangeMAX_EVENT.bind(this);
+    this.handleChangeMAX_COINEM_PER_EVENT = this.handleChangeMAX_COINEM_PER_EVENT.bind(this);
+    this.handleChangeMAX_COINEM = this.handleChangeMAX_COINEM.bind(this);
   }
 
   switchUser(user) {
@@ -231,12 +234,22 @@ class App extends React.Component{
 
   deleteHandler(username) {
     if ((username === this.state.currentUser) || (this.state.currentUser === "admin")){
-      let newEvents = [...this.state.events];
-      let newMembers = [...this.state.members];
-      this.state.events.filter(event => event.planner === username).forEach(event => this.handleDeleteCoinem(event.uid));
+      let newEvents = this.state.events.filter(event => event.planner !== username).map(event => {return {...event}});
+      //get list of events planned by to-be-delete user
+      let plannedEvents = this.state.events.filter(event => event.planner === username).map(event => event.uid);  
+      //for each member, see if they spent coinem on events list above, and delete these coinems
+      let newMembers = this.state.members.filter(member => member.username !== username).map( member => {
+        let pairs = Object.entries(member.coinem);
+        plannedEvents.forEach(num => {
+          let newPairs = pairs.filter(pair => pair[0]!==num.toString());
+          pairs = newPairs;
+        });
+        let newCoinem = Object.fromEntries(pairs);
+        return {...member, coinem: newCoinem}
+      });
       this.setState({
-        events: newEvents.filter(event => event.planner !== username),
-        members: newMembers.filter(member => member.username !== username)});
+        events: newEvents,
+        members: newMembers });
     }            
                   //FIX!!! warn user they are about to delete someone                    
   }
@@ -254,8 +267,8 @@ class App extends React.Component{
     let newEvents = [...this.state.events];
     let newMembers = this.state.members.map(member => {
       let pairs = Object.entries(member.coinem);
-      pairs.filter(pair => pair[0]!==eventObj.uid);
-      let newCoinem = Object.fromEntries(pairs);
+      let newPairs = pairs.filter(pair => pair[0]!==eventObj.uid.toString());
+      let newCoinem = Object.fromEntries(newPairs);
       return {...member, coinem: newCoinem}});
     this.setState(
       {events: newEvents.filter(event => event.uid !== eventObj.uid),
@@ -334,7 +347,7 @@ class App extends React.Component{
    * Process the uploaded file within the React app.
    */
 
-   handleNewFilename(event) {
+  handleNewFilename(event) {
     event.preventDefault();
     let name = event.target.value + ".json";
     this.setState ({fileName: name});
@@ -374,6 +387,27 @@ class App extends React.Component{
       reader.readAsText(fileObj);
     }
 
+  handleChangeMAX_EVENT(event){
+    event.preventDefault();
+    this.setState(
+      {MAX_EVENTS: event.target.value}
+    );
+  }
+
+  handleChangeMAX_COINEM_PER_EVENT(event){
+    event.preventDefault();
+    this.setState(
+      {MAX_COINEM_PER_EVENT: event.target.value}
+    );
+  }
+
+  handleChangeMAX_COINEM(event){
+    event.preventDefault();
+    this.setState(
+      {MAX_COINEM: event.target.value}
+    );
+  }
+
   render(){
   return (
     <div className="App">
@@ -392,10 +426,57 @@ class App extends React.Component{
          *Admin Only*
         </Typography>
         <Typography variant="body1" component="div">
-           MAX_EVENTS: {this.state.MAX_EVENTS} <br/>
-           MAX_COINEM_PER_EVENT: {this.state.MAX_COINEM_PER_EVENT}<br/>
-           MAX_COINEM: {this.state.MAX_COINEM}<br/>
-           NEXT_EVENT_UID: {this.state.NEXT_EVENT_UID}<br/>
+        <Box
+        component="form"
+        sx={{
+        '& .MuiTextField-root': { m: 1, width: '25ch' },
+        }}
+        noValidate
+        autoComplete="off"
+        >
+        <TextField
+          id="max-events"
+          label="MAX_EVENTS"
+          value={this.state.MAX_EVENTS} 
+          type="number"
+          InputLabelProps={{
+            shrink: true,
+          }}
+          variant="standard"
+          onChange={this.handleChangeMAX_EVENT}
+        /><br/>
+           <TextField
+          id="max-coinem-per-event"
+          label="MAX_COINEM_PER_EVENT"
+          value={this.state.MAX_COINEM_PER_EVENT} 
+          type="number"
+          InputLabelProps={{
+            shrink: true,
+          }}
+          variant="standard"
+          onChange={this.handleChangeMAX_COINEM_PER_EVENT}
+        /><br/>
+           <TextField
+          id="max-coinem"
+          label="MAX_COINEM"
+          value={this.state.MAX_COINEM} 
+          type="number"
+          InputLabelProps={{
+            shrink: true,
+          }}
+          variant="standard"
+          onChange={this.handleChangeMAX_COINEM}
+        /><br/>
+           <TextField
+          id="next-event-uid"
+          label="NEXT_EVENT_UID"
+          value={this.state.NEXT_EVENT_UID}
+          InputProps={{
+            readOnly: true,
+          }}
+          variant="standard"
+        /><br/>
+        </Box>
         </Typography>
         <div style ={{ display:"inline-block"}}>
           <Card sx={{ minWidth: 275, maxWidth:300 }} style={{ margin:20 }} variant="outlined">
