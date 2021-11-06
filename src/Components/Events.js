@@ -8,6 +8,7 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import FaceIcon from '@mui/icons-material/Face';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import { padding } from '@mui/system';
 
 const ListItem = styled('li')(({ theme }) => ({
   margin: theme.spacing(0.5),
@@ -69,7 +70,7 @@ class Event extends React.Component{
     return(
       <div style ={{ display:"inline-block"}}>
         <ThemeProvider theme={theme}>
-        <Card sx={{ minWidth: 275, maxWidth:300 }} style={{ margin:20 }} variant="outlined">
+        <Card sx={{ minWidth: 275, maxWidth:300 }} style={{ margin:20, padding:15}} variant="outlined">
           <CardContent>
             <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                 Event { this.props.evtObj.uid }
@@ -117,7 +118,7 @@ class Event extends React.Component{
                 })}    
             </Paper>
           </CardContent>
-          <CardActions style={{justifyContent: 'center'}}>
+          <CardActions style={{justifyContent: 'center',m:10} }>
           {selfPlannedEvent && <AlertDialog onDelete={this.props.onDelete} />}
           {(!selfPlannedEvent && !coinedEvent) && <Button variant="contained" onClick={()=>this.props.onCoinit(num)} startIcon={<MonetizationOnIcon/>}>Coin'it</Button>}
           </CardActions>

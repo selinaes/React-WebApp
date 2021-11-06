@@ -4,15 +4,20 @@
 explain (at a high level) the key design and implementation decisions you made; in cases where you made a choice, explain *why* you made that choice
 ### React Component Structure
 Decision to break up code into components in order to make it easier to understand
-### Security through Conditional Rendering
+### Conditional Rendering
+#### Security for admin-only behaviors
 Preventing regular users from having priviledges of an admin and ability to add or delete events/users that are not their own
+#### Coin'it and Delete buttons for different user/event relationship
+When displaying each event, we used conditional rendering, specifically logical && operator to make sure:
+(1) only planner can delete their own event, and 
+(2) only non-planner can "coin'it" events they have not yet coined (coinems for already coined event will be modified through -/+ buttons)
 ### State and Props
 when we chose to use state (eg App.js) and when we chose to use propsng 
 keeping all info in one place & using states to manage them
 deep vs shallow copying
 passing handlers as props
 Object.value/Object.key and reducing
-### Checking here if authentication works
+
 
 
 
