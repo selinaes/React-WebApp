@@ -234,12 +234,22 @@ class App extends React.Component{
 
   deleteHandler(username) {
     if ((username === this.state.currentUser) || (this.state.currentUser === "admin")){
-      let newEvents = [...this.state.events];
-      let newMembers = [...this.state.members];
-      this.state.events.filter(event => event.planner === username).forEach(event => this.handleDeleteCoinem(event.uid));
+      let newEvents = this.state.events.filter(event => event.planner !== username).map(event => {return {...event}});
+      //get list of events planned by to-be-delete user
+      let plannedEvents = this.state.events.filter(event => event.planner === username).map(event => event.uid);  
+      //for each member, see if they spent coinem on events list above, and delete these coinems
+      let newMembers = this.state.members.filter(member => member.username !== username).map( member => {
+        let pairs = Object.entries(member.coinem);
+        plannedEvents.forEach(num => {
+          let newPairs = pairs.filter(pair => pair[0]!==num.toString());
+          pairs = newPairs;
+        });
+        let newCoinem = Object.fromEntries(pairs);
+        return {...member, coinem: newCoinem}
+      });
       this.setState({
-        events: newEvents.filter(event => event.planner !== username),
-        members: newMembers.filter(member => member.username !== username)});
+        events: newEvents,
+        members: newMembers });
     }            
                   //FIX!!! warn user they are about to delete someone                    
   }
@@ -257,8 +267,8 @@ class App extends React.Component{
     let newEvents = [...this.state.events];
     let newMembers = this.state.members.map(member => {
       let pairs = Object.entries(member.coinem);
-      pairs.filter(pair => pair[0]!==eventObj.uid);
-      let newCoinem = Object.fromEntries(pairs);
+      let newPairs = pairs.filter(pair => pair[0]!==eventObj.uid.toString());
+      let newCoinem = Object.fromEntries(newPairs);
       return {...member, coinem: newCoinem}});
     this.setState(
       {events: newEvents.filter(event => event.uid !== eventObj.uid),
