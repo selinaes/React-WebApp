@@ -16,7 +16,8 @@ const Profile = props => (
     <Typography variant="body2">
       events planned: { (props.events.filter(event => event.planner === props.member.username)).map(event => <span>{event.uid}, </span>)} 
       | { Object.values(props.events.filter(event => event.planner === props.member.username)).length } total
-      <br/> coinem spent: {props.coinemLeft} coinem left: {props.coinemLeft}
+      | { (parseInt(props.MAX_EVENTS)) - (parseInt(Object.values(props.events.filter(event => event.planner === props.member.username)).length)) } left
+      <br/> coinem spent: {props.coinemSpent} coinem left: {props.coinemLeft}
       <br/> coinem pairs: { JSON.stringify(props.member.coinem)}
     </Typography>
 
