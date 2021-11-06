@@ -213,6 +213,7 @@ class App extends React.Component{
     this.handleDeleteEvent = this.handleDeleteEvent.bind(this);
     this.handleAddEvtCoin = this.handleAddEvtCoin.bind(this);
     this.handleMinusEvtCoin = this.handleMinusEvtCoin.bind(this);
+    this.handleCoinit = this.handleCoinit.bind(this);
     this.downloadHandler = this.downloadHandler.bind(this);
     this.uploadHandler = this.uploadHandler.bind(this);
     this.openFileHandler = this.openFileHandler.bind(this);
@@ -282,11 +283,9 @@ class App extends React.Component{
     let otherMembers = this.state.members.filter(member => member.username !== this.state.currentUser);
     let currentMember = this.state.members.find(member => member.username === this.state.currentUser);
     let oldCoin = currentMember.coinem[uid];
-    // console.log(oldCoin);
     let oldCoinem = currentMember.coinem;
     let modifiedCoinem = {...oldCoinem};
     modifiedCoinem[uid] = oldCoin+1; //need to prevent increasing over MAX!!
-    // console.log(modifiedCoinem);
     let newMember = {...currentMember, coinem: modifiedCoinem};
     this.setState(
       {members: [...otherMembers, newMember]}
@@ -298,11 +297,21 @@ class App extends React.Component{
     let otherMembers = this.state.members.filter(member => member.username !== this.state.currentUser);
     let currentMember = this.state.members.find(member => member.username === this.state.currentUser);
     let oldCoin = currentMember.coinem[uid];
-    // console.log(oldCoin);
     let oldCoinem = currentMember.coinem;
     let modifiedCoinem = {...oldCoinem};
     modifiedCoinem[uid] = oldCoin-1; //need to prevent decreasing lower than 0!!
-    // console.log(modifiedCoinem);
+    let newMember = {...currentMember, coinem: modifiedCoinem};
+    this.setState(
+      {members: [...otherMembers, newMember]}
+    );
+  }
+
+  handleCoinit(uid){
+    let otherMembers = this.state.members.filter(member => member.username !== this.state.currentUser);
+    let currentMember = this.state.members.find(member => member.username === this.state.currentUser);
+    let oldCoinem = currentMember.coinem;
+    let modifiedCoinem = {...oldCoinem};
+    modifiedCoinem[uid] = 1;
     let newMember = {...currentMember, coinem: modifiedCoinem};
     this.setState(
       {members: [...otherMembers, newMember]}
@@ -557,6 +566,7 @@ class App extends React.Component{
         onDeleteEvent = {this.handleDeleteEvent}
         onAddEvtCoin = {this.handleAddEvtCoin}
         onMinusEvtCoin = {this.handleMinusEvtCoin}
+        onCoinit = {this.handleCoinit}
         />
       <p style={{padding:"5%"}}>joining'em since 2021</p>
     </div>

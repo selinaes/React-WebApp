@@ -51,6 +51,21 @@ class Event extends React.Component{
     let totalMembers = sponsors.length;
     let totalCoinems = coinems.reduce((n,sum)=>n+sum,0)
 
+    let selfPlannedEvent;
+    let coinedEvent;
+    //Events created by the currentUser
+    if (this.props.currentUser===this.props.evtObj.planner || this.props.currentUser === 'admin') {
+      selfPlannedEvent = true;
+      coinedEvent = false;
+    } else { //event created by someone else
+      selfPlannedEvent = false;
+      if (this.props.members.find(member => member.username === this.props.currentUser).coinem[num] !== undefined){ //already Coined
+        coinedEvent = true;
+      } else { //not yet coined
+        coinedEvent = false;
+      }
+    }
+
     return(
       <div style ={{ display:"inline-block"}}>
         <ThemeProvider theme={theme}>
@@ -102,12 +117,10 @@ class Event extends React.Component{
                 })}    
             </Paper>
           </CardContent>
-          {(this.props.currentUser===this.props.evtObj.planner || this.props.currentUser === 'admin')
-        ? <CardActions style={{justifyContent: 'center'}}>
-                   <AlertDialog onDelete={this.props.onDelete} /> 
+          <CardActions style={{justifyContent: 'center'}}>
+          {selfPlannedEvent && <AlertDialog onDelete={this.props.onDelete} />}
+          {(!selfPlannedEvent && !coinedEvent) && <Button variant="contained" onClick={()=>this.props.onCoinit(num)} startIcon={<MonetizationOnIcon/>}>Coin'it</Button>}
           </CardActions>
-        : <br />
-      }
           </Card>
           </ThemeProvider>
       </div>
@@ -243,7 +256,9 @@ class EventsPage extends React.Component {
                 members = {this.props.members}
                 onDelete = {() => this.onDeleteEvent(event)}
                 onAddCoin = {this.props.onAddEvtCoin}
-                onMinusCoin = {this.props.onMinusEvtCoin}/>)
+                onMinusCoin = {this.props.onMinusEvtCoin}
+                onCoinit ={this.props.onCoinit}
+                />)
             }
           </div>
       </div>
