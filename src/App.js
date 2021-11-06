@@ -227,9 +227,16 @@ class App extends React.Component{
   }
 
   addHandler(newUser) {
-    this.setState({members: [...this.state.members, 
-      newUser]}
-      );
+    let usernames = this.state.members.map(member => toString(member.username));
+    if (usernames.indexOf(newUser.username) !== -1){
+      console.log("Error: Cannot add another user with username: ", newUser.username)
+    } 
+    else {
+      this.setState({members: [...this.state.members, 
+        newUser]}
+        );
+    }
+    
   }
 
   deleteHandler(username) {
