@@ -14,6 +14,7 @@ When displaying each event, we used conditional rendering, specifically logical 
 ### State and Props
 when we chose to use state (eg App.js) and when we chose to use propsng 
 keeping all info in one place & using states to manage them
+when to lift states up and when not to
 deep vs shallow copying
 passing handlers as props
 Object.value/Object.key and reducing

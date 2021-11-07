@@ -201,6 +201,7 @@ class App extends React.Component{
       NEXT_EVENT_UID: initialData.NEXT_EVENT_UID,
       members: initialData.members, // a list of member objects
       events: initialData.events, //a list of event objects
+      displayedEvents: initialData.events,
       currentUser: "admin",
       fileDownloadUrl: null,
       fileInfo: "",
@@ -221,6 +222,7 @@ class App extends React.Component{
     this.handleChangeMAX_EVENT = this.handleChangeMAX_EVENT.bind(this);
     this.handleChangeMAX_COINEM_PER_EVENT = this.handleChangeMAX_COINEM_PER_EVENT.bind(this);
     this.handleChangeMAX_COINEM = this.handleChangeMAX_COINEM.bind(this);
+    
   }
 
   switchUser(user) {
@@ -228,14 +230,13 @@ class App extends React.Component{
   }
 
   addHandler(newUser) {
-    this.setState({members: [...this.state.members, 
-      newUser]}
-      );
+    let copyMembers = this.state.members.map(member => JSON.parse(JSON.stringify(member)));
+    this.setState({members: [...copyMembers, newUser]});
   }
 
   deleteHandler(username) {
     if ((username === this.state.currentUser) || (this.state.currentUser === "admin")){
-      let newEvents = this.state.events.filter(event => event.planner !== username).map(event => {return {...event}});
+      let newEvents = this.state.events.filter(event => event.planner !== username).map(event => JSON.parse(JSON.stringify(event)));
       //get list of events planned by to-be-delete user
       let plannedEvents = this.state.events.filter(event => event.planner === username).map(event => event.uid);  
       //for each member, see if they spent coinem on events list above, and delete these coinems
@@ -251,28 +252,28 @@ class App extends React.Component{
       this.setState({
         events: newEvents,
         members: newMembers });
-    }            
-                  //FIX!!! warn user they are about to delete someone                    
+    }                            
   }
 
   handleAddEvent(newEvt){
     let prevUID = this.state.NEXT_EVENT_UID;
+    let copyEvents = this.state.events.map(event => JSON.parse(JSON.stringify(event))); //make deep copy
     this.setState(
-      {events: [...this.state.events, newEvt],
+      {events: [...copyEvents, newEvt],
       NEXT_EVENT_UID: prevUID +1,}    //update the count after a new event added
     );
   }
 
   handleDeleteEvent(eventObj){
     if ((eventObj.planner === this.state.currentUser) || (this.state.currentUser === "admin")){
-    let newEvents = [...this.state.events];
+    let newEvents = this.state.events.filter(event => event.uid !== eventObj.uid).map(event => JSON.parse(JSON.stringify(event)));
     let newMembers = this.state.members.map(member => {
       let pairs = Object.entries(member.coinem);
       let newPairs = pairs.filter(pair => pair[0]!==eventObj.uid.toString());
       let newCoinem = Object.fromEntries(newPairs);
       return {...member, coinem: newCoinem}});
     this.setState(
-      {events: newEvents.filter(event => event.uid !== eventObj.uid),
+      {events: newEvents,
        members: newMembers
       } //remove the event from events list
     );
@@ -280,11 +281,11 @@ class App extends React.Component{
   }
 
   handleAddEvtCoin(uid){
-    let otherMembers = this.state.members.filter(member => member.username !== this.state.currentUser);
+    let otherMembers = this.state.members.filter(member => member.username !== this.state.currentUser).map(member => JSON.parse(JSON.stringify(member)));
     let currentMember = this.state.members.find(member => member.username === this.state.currentUser);
     let oldCoin = currentMember.coinem[uid];
     let oldCoinem = currentMember.coinem;
-    let modifiedCoinem = {...oldCoinem};
+    let modifiedCoinem = JSON.parse(JSON.stringify(oldCoinem));
     modifiedCoinem[uid] = oldCoin+1; //need to prevent increasing over MAX!!
     let newMember = {...currentMember, coinem: modifiedCoinem};
     this.setState(
@@ -294,11 +295,11 @@ class App extends React.Component{
 
 
   handleMinusEvtCoin(uid){
-    let otherMembers = this.state.members.filter(member => member.username !== this.state.currentUser);
+    let otherMembers = this.state.members.filter(member => member.username !== this.state.currentUser).map(member => JSON.parse(JSON.stringify(member)));
     let currentMember = this.state.members.find(member => member.username === this.state.currentUser);
     let oldCoin = currentMember.coinem[uid];
     let oldCoinem = currentMember.coinem;
-    let modifiedCoinem = {...oldCoinem};
+    let modifiedCoinem = JSON.parse(JSON.stringify(oldCoinem));
     modifiedCoinem[uid] = oldCoin-1; //need to prevent decreasing lower than 0!!
     let newMember = {...currentMember, coinem: modifiedCoinem};
     this.setState(
@@ -307,10 +308,10 @@ class App extends React.Component{
   }
 
   handleCoinit(uid){
-    let otherMembers = this.state.members.filter(member => member.username !== this.state.currentUser);
+    let otherMembers = this.state.members.filter(member => member.username !== this.state.currentUser).map(member => JSON.parse(JSON.stringify(member)));
     let currentMember = this.state.members.find(member => member.username === this.state.currentUser);
     let oldCoinem = currentMember.coinem;
-    let modifiedCoinem = {...oldCoinem};
+    let modifiedCoinem = JSON.parse(JSON.stringify(oldCoinem));
     modifiedCoinem[uid] = 1;
     let newMember = {...currentMember, coinem: modifiedCoinem};
     this.setState(
@@ -416,6 +417,7 @@ class App extends React.Component{
       {MAX_COINEM: event.target.value}
     );
   }
+
 
   render(){
   return (
