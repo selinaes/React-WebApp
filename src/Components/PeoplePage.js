@@ -11,7 +11,7 @@ import Profile from "./Profile";
         {"username": '', 
         "firstname": '', 
         "lastname": '',
-        "coinem": {},     } 
+        "coinem": {},     }
       };
       this.handleNewUsername = this.handleNewUsername.bind(this);
       this.handleNewFirstname = this.handleNewFirstname.bind(this);
@@ -47,6 +47,7 @@ import Profile from "./Profile";
       "coinem": {},     } ,
     })
     }
+    
 
     render(){
       return(
@@ -156,11 +157,14 @@ import Profile from "./Profile";
   class PeoplePage extends React.Component {
     constructor(props) {
       super(props);
-  
+
+      this.state =  {
+        hide: true};
+
       this.onAddUser = this.onAddUser.bind(this);
       this.onDeleteUser = this.onDeleteUser.bind(this);
       this.onSwitch = this.onSwitch.bind(this);
-      // this.calculateEventCoinem = this.calculateEventCoinem.bind(this);
+      this.hideUsers = this.hideUsers.bind(this);
       this.remainingCoinem = this.remainingCoinem.bind(this);
       
     }
@@ -189,12 +193,16 @@ import Profile from "./Profile";
     remainingCoinem(member){
       return this.props.MAX_COINEM - this.calculateUserCoinem(member)
     }
-
-    // remainingEvents(member) {
-    //   // from list of members, select member with username, then get their coinem list and add key values
-      
-    // }
-
+    hideUsers(e){
+      e.preventDefault();
+      if (this.state.hide){
+        this.setState({hide: false})
+      }
+      else{
+        this.setState({hide: true})
+      }
+    }
+    
     render() {
       return (
         <div>
@@ -202,17 +210,43 @@ import Profile from "./Profile";
           <AddUser onClick = {this.onAddUser} />
           {/* {adminOnly} */}
           <h2 id="members">Members</h2>
-          <div>
-            {this.props.members.map(member => 
-            (<Profile member={member}
-              currentUser={this.props.currentUser}
-              events={this.props.events}
-              coinemSpent = { this.calculateUserCoinem(member)}
-              coinemLeft= {this.remainingCoinem(member)}
-              onDelete={() => this.onDeleteUser(member.username)}
-              MAX_EVENTS = {this.props.MAX_EVENTS}/>
-            ))}
-          </div>
+          {(this.props.currentUser !== 'admin')
+        ?<Button size="small" onClick={this.hideUsers}>{(this.state.hide)?"Show":"Hide"} other members</Button>
+        :<div>
+        {this.props.members.map(member => 
+        (<Profile member={member}
+          currentUser={this.props.currentUser}
+          events={this.props.events}
+          coinemSpent = { this.calculateUserCoinem(member)}
+          coinemLeft= {this.remainingCoinem(member)}
+          onDelete={() => this.onDeleteUser(member.username)}
+          MAX_EVENTS = {this.props.MAX_EVENTS}/>
+        ))}
+      </div>}
+      {(this.state.hide)
+        ?<div>
+        {this.props.members.filter(member=> member.username === this.props.currentUser).map(member => 
+        (<Profile member={member}
+          currentUser={this.props.currentUser}
+          events={this.props.events}
+          coinemSpent = { this.calculateUserCoinem(member)}
+          coinemLeft= {this.remainingCoinem(member)}
+          onDelete={() => this.onDeleteUser(member.username)}
+          MAX_EVENTS = {this.props.MAX_EVENTS}/>
+        ))}
+      </div>
+        :<div>
+        {this.props.members.map(member => 
+        (<Profile member={member}
+          currentUser={this.props.currentUser}
+          events={this.props.events}
+          coinemSpent = { this.calculateUserCoinem(member)}
+          coinemLeft= {this.remainingCoinem(member)}
+          onDelete={() => this.onDeleteUser(member.username)}
+          MAX_EVENTS = {this.props.MAX_EVENTS}/>
+        ))}
+      </div>}
+          
         </div>
         );
     }
