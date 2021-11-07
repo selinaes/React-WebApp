@@ -1,6 +1,7 @@
 import React from 'react'
 import AlertDialog from './Delete';
-import { Badge, Card, CardContent, Chip, IconButton, Paper, Typography, TextField, CardActions, Button, FormControl } from '@mui/material';
+import { Badge, Card, CardContent, Chip, IconButton, Paper, Typography, TextField, CardActions, Button, FormControl, 
+  FormControlLabel, Radio, RadioGroup } from '@mui/material';
 
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 
@@ -8,7 +9,6 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import FaceIcon from '@mui/icons-material/Face';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
-import { padding } from '@mui/system';
 
 const ListItem = styled('li')(({ theme }) => ({
   margin: theme.spacing(0.5),
@@ -220,42 +220,102 @@ class InputEvent extends React.Component {
   }
 }
 
+class RadioButtonsGroup extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {value: 'all'};
+
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(event) {
+    this.setState({value: event.target.value});
+    this.props.onChange(event.target.value);
+  }
+
+  render(){
+  return (
+    <div>
+      {this.props.currentUser !== 'admin' &&
+          <FormControl component="fieldset">
+            <RadioGroup row aria-label="events-viewing-options"  defaultValue="all" value={this.state.value} onChange={this.handleChange}>
+              <FormControlLabel value="all" control={<Radio />} label="All events" color="secondary"/>
+              <FormControlLabel value="self-planned" control={<Radio />} label="Events I planned" />
+              <FormControlLabel value="others-planned" control={<Radio />} label="Events others planned" />
+              <FormControlLabel value="coinem-spent" control={<Radio />} label="I've spent coinems"/>
+              <FormControlLabel value="coinem-not-spent" control={<Radio />} label="I haven't spent coinems"/>
+            </RadioGroup>
+          </FormControl>
+      }
+      </div>
+    );
+  }
+}
+
 //parent component for all of the Events + AddEvent
 class EventsPage extends React.Component {
-    
-  constructor(props){
+  constructor(props) {
     super(props);
-
-    this.onAddEvent = this.onAddEvent.bind(this);
-    this.onDeleteEvent = this.onDeleteEvent.bind(this);
-   }
-
-  onAddEvent(newEvt){
-    this.props.onAddEvent(newEvt)
+    this.state = {
+      displayedEvents: this.props.events,
+    };
+    this.onSelectViewing = this.onSelectViewing.bind(this);
   }
-  
-  onDeleteEvent(eventObj){
-    this.props.onDeleteEvent(eventObj);
-  } 
+
+  onSelectViewing(option){
+    switch (option){
+      case "all":
+        this.setState({displayedEvents: this.props.events});
+        break;
+      case "self-planned":
+        let selfplannedEvents = this.props.events.filter(event => this.props.currentUser===event.planner).map(event => JSON.parse(JSON.stringify(event)));
+        this.setState({displayedEvents: selfplannedEvents});
+        break;
+      case "others-planned":
+        let othersEvents = this.props.events.filter(event => this.props.currentUser!==event.planner).map(event => JSON.parse(JSON.stringify(event)));
+        this.setState({displayedEvents: othersEvents});
+        break;
+      case "coinem-spent":
+        let mycoinem = this.props.members.find(member => member.username === this.props.currentUser).coinem;
+        let mycoinedList = Object.keys(mycoinem);
+        let coinedEvents = [];
+        mycoinedList.forEach(
+          item => {coinedEvents.push(JSON.parse(JSON.stringify(this.props.events.find(event => item===event.uid.toString()))))}
+        );
+        this.setState({displayedEvents: coinedEvents});
+        break;
+      case "coinem-not-spent":
+        let coinem = this.props.members.find(member => member.username === this.props.currentUser).coinem;
+        let coinedList = Object.keys(coinem);
+        let allUIDList = this.props.events.map(event => event.uid.toString());
+        let uncoinedList = allUIDList.filter(uid => !coinedList.includes(uid));
+        let notcoinedEvents = [];
+        uncoinedList.forEach(
+          item => {notcoinedEvents.push(JSON.parse(JSON.stringify(this.props.events.find(event => item===event.uid.toString()))))}
+        );
+        this.setState({displayedEvents: notcoinedEvents});
+    }
+  }
 
   render() {
     return <div>
       <div>
         <InputEvent 
-          key = {this.props.NEXT_EVENT_UID+this.props.currentUser} //not sure why I have to use this to force InputEvent to re-render
+          key = {this.props.NEXT_EVENT_UID+this.props.currentUser} 
           NEXT_EVENT_UID = {this.props.NEXT_EVENT_UID}
           planner = {this.props.currentUser}
-          addEvent = {this.onAddEvent}
+          addEvent = {this.props.onAddEvent}
         />
         <h2 id="events">Events</h2>
+          <RadioButtonsGroup currentUser = {this.props.currentUser} onChange={this.onSelectViewing}/>
           <div>
-            {this.props.events.map(
+            {this.state.displayedEvents.map(
                 (event) => 
                 <Event 
                 evtObj = {event}
                 currentUser = {this.props.currentUser}
                 members = {this.props.members}
-                onDelete = {() => this.onDeleteEvent(event)}
+                onDelete = {() => this.props.onDeleteEvent(event)}
                 onAddCoin = {this.props.onAddEvtCoin}
                 onMinusCoin = {this.props.onMinusEvtCoin}
                 onCoinit ={this.props.onCoinit}
