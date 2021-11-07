@@ -129,19 +129,22 @@ import Profile from "./Profile";
                         <MenuItem value="admin">
                           <em>admin</em>
                         </MenuItem>
-                        {this.props.members
-                        .sort(function(a, b){
-                          if(a.username < b.username) { return -1; }
-                          if(a.username > b.username) { return 1; }
-                          return 0;
-                      })
-                      .map((member) => (
-                          <MenuItem
-                            key={member.username}
-                            value={member.username}>
-                            {member.username}
-                          </MenuItem>
-                        ))}
+                        {(this.props.currentUser === 'admin')
+        ? (this.props.members
+        .sort(function(a, b){
+          if(a.username < b.username) { return -1; }
+          if(a.username > b.username) { return 1; }
+          return 0;
+      })
+      .map((member) => (
+          <MenuItem
+            key={member.username}
+            value={member.username}>
+            {member.username}
+          </MenuItem>
+        )))
+        : <br />
+      }
                       </Select>
                     </FormControl>
               </CardContent>
@@ -171,7 +174,12 @@ import Profile from "./Profile";
     }
 
     onAddUser(newUser){
-      this.props.addHandler(newUser)
+      let usernames = this.props.members.map(member => toString(member.username));
+      if (usernames.indexOf(newUser.username) !== -1){
+        console.log("Error: Cannot add another user with username: ", newUser.username)
+      } else {
+      this.props.addHandler(newUser)}
+      //buggy
     }
 
     calculateUserCoinem(member) {

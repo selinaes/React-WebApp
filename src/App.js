@@ -230,8 +230,16 @@ class App extends React.Component{
   }
 
   addHandler(newUser) {
-    let copyMembers = this.state.members.map(member => JSON.parse(JSON.stringify(member)));
-    this.setState({members: [...copyMembers, newUser]});
+    let usernames = this.state.members.map(member => toString(member.username));
+    if (usernames.indexOf(newUser.username) !== -1){
+      console.log("Error: Cannot add another user with username: ", newUser.username)
+    } 
+    else {
+      let copyMembers = this.state.members.map(member => JSON.parse(JSON.stringify(member)));
+      this.setState({members: [...copyMembers, 
+        newUser]}
+        );
+    }
   }
 
   deleteHandler(username) {
@@ -252,7 +260,10 @@ class App extends React.Component{
       this.setState({
         events: newEvents,
         members: newMembers });
-    }                            
+    }            
+    if (username === this.state.currentUser){
+      this.setState({currentUser: 'admin'})
+    }
   }
 
   handleAddEvent(newEvt){
