@@ -9,6 +9,7 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import FaceIcon from '@mui/icons-material/Face';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import EventIcon from '@mui/icons-material/Event';
 
 const ListItem = styled('li')(({ theme }) => ({
   margin: theme.spacing(0.5),
@@ -84,7 +85,7 @@ class Event extends React.Component{
                 { this.props.evtObj.description }
             </Typography>
             <Typography sx={{ fontSize: 16 }} color="orange" gutterBottom>
-                Planner: { this.props.evtObj.planner }
+                planner: { this.props.evtObj.planner }
             </Typography>
             <Paper sx={{display: 'flex',justifyContent: 'center',flexWrap: 'wrap',listStyle: 'none',p: 0.5,m: 0}}
                   component="ul" elevation='0'>
@@ -210,7 +211,7 @@ class InputEvent extends React.Component {
                     </FormControl>
               </CardContent>
               <CardActions style={{justifyContent: 'center'}}>
-                <Button size="medium" onClick={this.onAddClick}>Add Event</Button> 
+              <Button variant="contained" onClick={this.onAddClick} startIcon={<EventIcon/>}>Add Event</Button>
                 {/* must name a seperate click handler this.onAddClick here, because within render cannot call any function, 
                 cannot call this.props.xxx or will get into infinite loop*/}
               </CardActions>

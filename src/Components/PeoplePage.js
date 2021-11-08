@@ -88,7 +88,7 @@ import Profile from "./Profile";
                     </FormControl>
               </CardContent>
               <CardActions style={{justifyContent: 'center'}}>
-                <Button size="small" onClick={this.onClick}>Add User</Button>
+                <Button size="small" variant="contained" onClick={this.onClick}>Add User</Button>
               </CardActions>
             </Card>
           </div>
@@ -244,7 +244,7 @@ import Profile from "./Profile";
                     </FormControl>
         
           {(this.props.currentUser !== 'admin')
-        ?<Button size="small" onClick={this.hideUsers}>{(this.state.hide)?"Show":"Hide"} other members</Button>
+        ?<div><br/><Button size="small" variant="contained" onClick={this.hideUsers}>{(this.state.hide)?"Show":"Hide"} other members</Button></div>
         :<div>
         {this.state.sortedMembers.map(member => 
         (<Profile member={member}

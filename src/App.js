@@ -444,7 +444,10 @@ class App extends React.Component{
         {/* {adminOnly} */}
         {(this.state.currentUser === 'admin')
         ? <div>
-        <Typography variant="h2" component="div">
+          <div style ={{ display:"inline-block"}}>
+          <Card sx={{ minWidth: 275, maxWidth:500 }} style={{ margin:20 }} variant="outlined">
+          <CardContent>
+        <Typography variant="h3" color="orange" component="div">
          *Admin Only*
         </Typography>
         <Typography variant="body1" component="div">
@@ -500,8 +503,7 @@ class App extends React.Component{
         /><br/>
         </Box>
         </Typography>
-        <div style ={{ display:"inline-block"}}>
-          <Card sx={{ minWidth: 275, maxWidth:300 }} style={{ margin:20 }} variant="outlined">
+        </CardContent>
           <CardContent>
           <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
           File Upload/Download
