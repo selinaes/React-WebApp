@@ -433,6 +433,9 @@ class App extends React.Component{
   render(){
   return (
     <div className="App">
+      {/* <style type="text/css">
+        .hidden { {display:none} }
+      </style> */}
       <header className="App-header">
       <NavBar />
         <img src={sun} className="App-logo" alt="logo" />

@@ -41,6 +41,45 @@ const theme = createTheme({
 
 //child component of EventPage, displaying a single event
 class Event extends React.Component{
+  constructor(props) {
+    super(props)
+    this.state = {
+      shouldHide : false,
+      selfPlannedEvent: false,
+      coinedEvent: false
+    }
+  }
+
+  componentDidMount(){
+    console.log("mounted!")
+    //Events created by the currentUser
+    if (this.props.currentUser===this.props.evtObj.planner || this.props.currentUser === 'admin') {
+      this.setState(
+      {selfPlannedEvent : true,
+      coinedEvent : false,});
+    } else { //event created by someone else
+      this.setState({selfPlannedEvent : false});
+      if (this.props.members.find(member => member.username === this.props.currentUser).coinem[this.props.evtObj.uid] !== undefined){ //already Coined
+        this.setState({coinedEvent : true});
+      } else { //not yet coined
+        this.setState({coinedEvent : false});
+      }
+    }
+
+
+    if (this.props.viewOption === 'all'){
+      this.setState({shouldHide: false});
+    } else if (this.props.viewOption === 'self-planned' && !this.state.selfPlannedEvent){
+      this.setState({shouldHide: true});
+    } else if (this.props.viewOption === 'others-planned' && this.state.selfPlannedEvent){
+      this.setState({shouldHide: true});
+    } else if (this.props.viewOption === 'coinem-spent' && !this.state.coinedEvent){
+      this.setState({shouldHide: true});
+    }else if (this.props.viewOption === 'coinem-not-planned' && this.state.coinedEvent){
+      this.setState({shouldHide: true});
+    }
+  }
+
 
   render(){
     let sponsorCoinsPair = {};
@@ -52,23 +91,10 @@ class Event extends React.Component{
     let totalMembers = sponsors.length;
     let totalCoinems = coinems.reduce((n,sum)=>n+sum,0)
 
-    let selfPlannedEvent;
-    let coinedEvent;
-    //Events created by the currentUser
-    if (this.props.currentUser===this.props.evtObj.planner || this.props.currentUser === 'admin') {
-      selfPlannedEvent = true;
-      coinedEvent = false;
-    } else { //event created by someone else
-      selfPlannedEvent = false;
-      if (this.props.members.find(member => member.username === this.props.currentUser).coinem[num] !== undefined){ //already Coined
-        coinedEvent = true;
-      } else { //not yet coined
-        coinedEvent = false;
-      }
-    }
+    
 
     return(
-      <div style ={{ display:"inline-block"}}>
+      <div style ={{ display: this.state.shouldHide ? "none" : "inline-block"}} > 
         <ThemeProvider theme={theme}>
         <Card sx={{ maxWidth:350, minHeight:350 }} style={{ margin:20, padding:15}} variant="outlined">
           <CardContent>
@@ -119,8 +145,8 @@ class Event extends React.Component{
             </Paper>
           </CardContent>
           <CardActions style={{justifyContent: 'center',m:10} }>
-          {selfPlannedEvent && <AlertDialog onDelete={this.props.onDelete} />}
-          {(!selfPlannedEvent && !coinedEvent) && <Button variant="contained" onClick={()=>this.props.onCoinit(num)} startIcon={<MonetizationOnIcon/>}>Coin'it</Button>}
+          {this.state.selfPlannedEvent && <AlertDialog onDelete={this.props.onDelete} />}
+          {(!this.state.selfPlannedEvent && !this.state.coinedEvent) && <Button variant="contained" onClick={()=>this.props.onCoinit(num)} startIcon={<MonetizationOnIcon/>}>Coin'it</Button>}
           </CardActions>
           </Card>
           </ThemeProvider>
@@ -257,48 +283,56 @@ class EventsPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      displayedEvents: this.props.events,
+      // displayedEvents: this.props.events,
+      viewOption: 'all'
     };
     this.onSelectViewing = this.onSelectViewing.bind(this);
   }
 
+
+  // onSelectViewing(option){
+  //   switch (option){
+  //     case "all":
+  //       // this.setState({displayedEvents: this.props.events});
+  //       break;
+  //     case "self-planned":
+  //       let selfplannedEvents = this.props.events.filter(event => this.props.currentUser===event.planner).map(event => JSON.parse(JSON.stringify(event)));
+  //       this.setState({displayedEvents: selfplannedEvents});
+  //       break;
+  //     case "others-planned":
+  //       let othersEvents = this.props.events.filter(event => this.props.currentUser!==event.planner).map(event => JSON.parse(JSON.stringify(event)));
+  //       this.setState({displayedEvents: othersEvents});
+  //       break;
+  //     case "coinem-spent":
+  //       let mycoinem = this.props.members.find(member => member.username === this.props.currentUser).coinem;
+  //       let mycoinedList = Object.keys(mycoinem);
+  //       let coinedEvents = [];
+  //       mycoinedList.forEach(
+  //         item => {coinedEvents.push(JSON.parse(JSON.stringify(this.props.events.find(event => item===event.uid.toString()))))}
+  //       );
+  //       this.setState({displayedEvents: coinedEvents});
+  //       break;
+  //     case "coinem-not-spent":
+  //       let coinem = this.props.members.find(member => member.username === this.props.currentUser).coinem;
+  //       let coinedList = Object.keys(coinem);
+  //       let allUIDList = this.props.events.map(event => event.uid.toString());
+  //       let uncoinedList = allUIDList.filter(uid => !coinedList.includes(uid));
+  //       let notcoinedEvents = [];
+  //       uncoinedList.forEach(
+  //         item => {notcoinedEvents.push(JSON.parse(JSON.stringify(this.props.events.find(event => item===event.uid.toString()))))}
+  //       );
+  //       this.setState({displayedEvents: notcoinedEvents});
+  //   }
+  // }
+
+ 
   onSelectViewing(option){
-    switch (option){
-      case "all":
-        this.setState({displayedEvents: this.props.events});
-        break;
-      case "self-planned":
-        let selfplannedEvents = this.props.events.filter(event => this.props.currentUser===event.planner).map(event => JSON.parse(JSON.stringify(event)));
-        this.setState({displayedEvents: selfplannedEvents});
-        break;
-      case "others-planned":
-        let othersEvents = this.props.events.filter(event => this.props.currentUser!==event.planner).map(event => JSON.parse(JSON.stringify(event)));
-        this.setState({displayedEvents: othersEvents});
-        break;
-      case "coinem-spent":
-        let mycoinem = this.props.members.find(member => member.username === this.props.currentUser).coinem;
-        let mycoinedList = Object.keys(mycoinem);
-        let coinedEvents = [];
-        mycoinedList.forEach(
-          item => {coinedEvents.push(JSON.parse(JSON.stringify(this.props.events.find(event => item===event.uid.toString()))))}
-        );
-        this.setState({displayedEvents: coinedEvents});
-        break;
-      case "coinem-not-spent":
-        let coinem = this.props.members.find(member => member.username === this.props.currentUser).coinem;
-        let coinedList = Object.keys(coinem);
-        let allUIDList = this.props.events.map(event => event.uid.toString());
-        let uncoinedList = allUIDList.filter(uid => !coinedList.includes(uid));
-        let notcoinedEvents = [];
-        uncoinedList.forEach(
-          item => {notcoinedEvents.push(JSON.parse(JSON.stringify(this.props.events.find(event => item===event.uid.toString()))))}
-        );
-        this.setState({displayedEvents: notcoinedEvents});
-    }
+    this.setState({viewOption:option});
   }
 
   render() {
     return <div>
+      
       <div>
         <InputEvent 
           key = {this.props.NEXT_EVENT_UID+this.props.currentUser} 
@@ -309,7 +343,7 @@ class EventsPage extends React.Component {
         <h2 id="events">Events</h2>
           <RadioButtonsGroup currentUser = {this.props.currentUser} onChange={this.onSelectViewing}/>
           <div>
-            {this.state.displayedEvents.map(
+            {this.props.events.map(
                 (event) => 
                 <Event 
                 evtObj = {event}
@@ -319,6 +353,7 @@ class EventsPage extends React.Component {
                 onAddCoin = {this.props.onAddEvtCoin}
                 onMinusCoin = {this.props.onMinusEvtCoin}
                 onCoinit ={this.props.onCoinit}
+                viewOption = {this.props.viewOption}
                 />)
             }
           </div>
