@@ -70,7 +70,7 @@ class Event extends React.Component{
     return(
       <div style ={{ display:"inline-block"}}>
         <ThemeProvider theme={theme}>
-        <Card sx={{ minWidth: 275, maxWidth:300 }} style={{ margin:20, padding:15}} variant="outlined">
+        <Card sx={{ maxWidth:350, minHeight:350 }} style={{ margin:20, padding:15}} variant="outlined">
           <CardContent>
             <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                 Event { this.props.evtObj.uid }
