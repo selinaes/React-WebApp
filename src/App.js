@@ -267,7 +267,7 @@ class App extends React.Component{
   }
 
   handleAddEvent(newEvt){
-    if (this.state.currentUser === 'admin' &&
+    if (this.state.currentUser === 'admin' ||
     Object.values(this.state.events.filter(event => event.planner === this.state.currentUser)).length > 0){
       let prevUID = this.state.NEXT_EVENT_UID;
       let copyEvents = this.state.events.map(event => JSON.parse(JSON.stringify(event))); //make deep copy

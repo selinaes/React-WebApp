@@ -211,7 +211,11 @@ class InputEvent extends React.Component {
                     </FormControl>
               </CardContent>
               <CardActions style={{justifyContent: 'center'}}>
-              <Button variant="contained" onClick={this.onAddClick} startIcon={<EventIcon/>}>Add Event</Button>
+                
+              {(this.props.currentUser === 'admin' ||
+                  (Object.values(this.props.events.filter(event => event.planner === this.props.currentUser)).length) < this.props.MAX_EVENTS)? <div>
+              <Button variant="contained" onClick={this.onAddClick} startIcon={<EventIcon/>}>Add Event</Button> </div>
+              : <p style={{color:'red'}}>You have planned the maximum number of events. Delete one to add a new one!</p>}
                 {/* must name a seperate click handler this.onAddClick here, because within render cannot call any function, 
                 cannot call this.props.xxx or will get into infinite loop*/}
               </CardActions>
@@ -306,6 +310,9 @@ class EventsPage extends React.Component {
           NEXT_EVENT_UID = {this.props.NEXT_EVENT_UID}
           planner = {this.props.currentUser}
           addEvent = {this.props.onAddEvent}
+          currentUser = {this.props.currentUser}
+          events = {this.props.events}
+          MAX_EVENTS={this.props.MAX_EVENTS}
         />
         <h2 id="events">Events</h2>
           <RadioButtonsGroup currentUser = {this.props.currentUser} onChange={this.onSelectViewing}/>
