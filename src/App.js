@@ -267,12 +267,21 @@ class App extends React.Component{
   }
 
   handleAddEvent(newEvt){
-    let prevUID = this.state.NEXT_EVENT_UID;
-    let copyEvents = this.state.events.map(event => JSON.parse(JSON.stringify(event))); //make deep copy
-    this.setState(
+    if (this.state.currentUser === 'admin' &&
+    Object.values(this.state.events.filter(event => event.planner === this.state.currentUser)).length > 0){
+      let prevUID = this.state.NEXT_EVENT_UID;
+      let copyEvents = this.state.events.map(event => JSON.parse(JSON.stringify(event))); //make deep copy
+      this.setState(
       {events: [...copyEvents, newEvt],
       NEXT_EVENT_UID: prevUID +1,}    //update the count after a new event added
     );
+    console.log('Added new event');
+
+    }
+    else{
+      console.log('Cannot add a new event, you have reached the max number of events.');
+
+    }
   }
 
   handleDeleteEvent(eventObj){
