@@ -55,7 +55,7 @@ import Profile from "./Profile";
             <Card  sx={{ minWidth: 275, maxWidth:300 }} style={{ margin:20, align:"center" }} variant="outlined">
               <CardContent>
                 <Typography variant="h5" component="div">
-                  Add User
+                  Add Member
                 </Typography>
                 <FormControl fullWidth>
                   <InputLabel id="username">Username</InputLabel>
@@ -154,18 +154,23 @@ import Profile from "./Profile";
       );
     }
   }
+  const sortTypes = ['username', 'events planned', 'coinem spent'];
   class PeoplePage extends React.Component {
     constructor(props) {
       super(props);
 
       this.state =  {
-        hide: true};
+        hide: true,
+        sortBy: 'username',
+        sortedMembers: this.props.members
+      };
 
       this.onAddUser = this.onAddUser.bind(this);
       this.onDeleteUser = this.onDeleteUser.bind(this);
       this.onSwitch = this.onSwitch.bind(this);
       this.hideUsers = this.hideUsers.bind(this);
       this.remainingCoinem = this.remainingCoinem.bind(this);
+      this.sortMembers = this.sortMembers.bind(this);
       
     }
 
@@ -202,18 +207,46 @@ import Profile from "./Profile";
         this.setState({hide: true})
       }
     }
+
+    sortMembers(e) {
+      let sortType = e.target.value;
+      let sortedData = [...this.props.members] //default is to sort by member
+      if (sortType === 'events planned'){
+        sortedData = [...this.props.members].sort((a, b) => Object.values(this.props.events.filter(event => event.planner === b.username)).length - Object.values(this.props.events.filter(event => event.planner === a.username)).length);
+      }
+      else if (sortType === 'coinem spent'){
+        sortedData = [...this.props.members].sort((a, b) => this.calculateUserCoinem(b) - this.calculateUserCoinem(a));
+      }
+      this.setState( {sortBy: sortType, sortedMembers: sortedData } );
+    }
     
     render() {
       return (
         <div>
           <SwitchUser currentUser={this.props.currentUser} members= {this.props.members} onChange={this.onSwitch}/>
           <AddUser onClick = {this.onAddUser} />
-          {/* {adminOnly} */}
           <h2 id="members">Members</h2>
+          <FormControl size='medium' style={{width:'10%'}}>
+                  <InputLabel id="sort">Sort By</InputLabel>
+                      <Select variant='outlined'
+                        labelId="sort"
+                        id="sort"
+                        // value={updateUser}
+                        label="Sort"
+                        onChange={evt => this.sortMembers(evt)}
+                      >
+                        {sortTypes.map(type => <MenuItem
+                        key={type}
+                        value={type}>
+                        {type}
+                    </MenuItem>)}
+                      </Select>
+                    </FormControl>
+        
           {(this.props.currentUser !== 'admin')
         ?<Button size="small" onClick={this.hideUsers}>{(this.state.hide)?"Show":"Hide"} other members</Button>
         :<div>
-        {this.props.members.map(member => 
+        {this.state.sortedMembers.map(member => 
         (<Profile member={member}
           currentUser={this.props.currentUser}
           events={this.props.events}
@@ -236,7 +269,7 @@ import Profile from "./Profile";
         ))}
       </div>
         :<div>
-        {this.props.members.map(member => 
+        {this.state.sortedMembers.map(member => 
         (<Profile member={member}
           currentUser={this.props.currentUser}
           events={this.props.events}
@@ -251,5 +284,4 @@ import Profile from "./Profile";
         );
     }
   }
-  
- export default PeoplePage;
+export default PeoplePage;
