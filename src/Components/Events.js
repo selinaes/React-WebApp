@@ -48,9 +48,30 @@ function calculateEventCoinem(evtObj, members){
   let coinems = Object.values(sponsorCoinsPair);
   return [sponsors, coinems];
 }
+function checkCoinemMax(username, evtObj, members){
+  
+  
+}
 
 //child component of EventPage, displaying a single event
 class Event extends React.Component{
+  checkCoinemMax(){
+    const coin = this.props.members.find(member => member.username === this.props.currentUser).coinem[this.props.evtObj.uid];
+    if (coin < this.props.MAX_COINEM_PER_EVENT){
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  checkCoinemZero(){
+    const coin = this.props.members.find(member => member.username === this.props.currentUser).coinem[this.props.evtObj.uid];
+    if (coin > 0){
+      return false;
+    } else {
+      return true;
+    }
+  }
 
   render(){
     const [sponsors,coinems] = calculateEventCoinem(this.props.evtObj, this.props.members);
@@ -70,6 +91,7 @@ class Event extends React.Component{
         coinedEvent = false;
       }
     }
+
 
     return(
       <div style ={{ display: "inline-block"}} > 
@@ -98,11 +120,11 @@ class Event extends React.Component{
                   let minusCoin;
                    if (item === this.props.currentUser) {
                     addCoin = 
-                    <IconButton aria-label="add" size="small" onClick={()=>this.props.onAddCoin(this.evtObj.uid)}>
+                    <IconButton aria-label="add" size="small" disabled={this.checkCoinemMax()} onClick={()=>this.props.onAddCoin(this.props.evtObj.uid)}>
                     <AddCircleOutlineIcon />
                     </IconButton>;
                     minusCoin =
-                    <IconButton aria-label="minus" size="small" onClick={()=>this.props.onMinusCoin(this.evtObj.uid)}>
+                    <IconButton aria-label="minus" size="small" disabled={this.checkCoinemZero()} onClick={()=>this.props.onMinusCoin(this.props.evtObj.uid)}>
                     <RemoveCircleOutlineIcon />
                     </IconButton>;
                   }
@@ -124,7 +146,7 @@ class Event extends React.Component{
           </CardContent>
           <CardActions style={{justifyContent: 'center',m:10} }>
           {selfPlannedEvent && <AlertDialog onDelete={this.props.onDelete} />}
-          {(!selfPlannedEvent && !coinedEvent) && <Button variant="contained" onClick={()=>this.props.onCoinit(this.evtObj.uid)} startIcon={<MonetizationOnIcon/>}>Coin'it</Button>}
+          {(!selfPlannedEvent && !coinedEvent) && <Button variant="contained" onClick={()=>this.props.onCoinit(this.props.evtObj.uid)} startIcon={<MonetizationOnIcon/>}>Coin'it</Button>}
           </CardActions>
           </Card>
           </ThemeProvider>
@@ -379,6 +401,7 @@ class EventsPage extends React.Component {
                 <Event 
                 evtObj = {event}
                 currentUser = {this.props.currentUser}
+                MAX_COINEM_PER_EVENT = {this.props.MAX_COINEM_PER_EVENT}
                 members = {this.props.members}
                 onDelete = {() => this.props.onDeleteEvent(event)}
                 onAddCoin = {this.props.onAddEvtCoin}
