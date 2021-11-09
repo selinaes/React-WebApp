@@ -287,6 +287,7 @@ class InputEvent extends React.Component {
       alert('Please make sure title/description is not empty!');
     } else{
     this.props.addEvent(this.state.newEvent); //can only call props.method here, not in render(), else get into infinite loop
+    console.log(this.state.newEvent);
     this.setState({
       newEvent: {
         "uid": this.props.NEXT_EVENT_UID, 

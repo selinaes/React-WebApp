@@ -241,7 +241,10 @@ import Profile from "./Profile";
       return (
         <div>
           <SwitchUser currentUser={this.props.currentUser} members= {this.props.members} onChange={this.onSwitch}/>
+          {(this.props.currentUser === 'admin')?
           <AddUser onClick = {this.onAddUser} />
+        : <br/>
+        }
           <h2 id="members">Members</h2>
           <FormControl size='medium' style={{width:'15%'}}>
                   <InputLabel id="sort" >Sort By</InputLabel>
