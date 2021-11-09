@@ -266,12 +266,21 @@ class App extends React.Component{
   }
 
   handleAddEvent(newEvt){
-    let prevUID = this.state.NEXT_EVENT_UID;
-    let copyEvents = this.state.events.map(event => JSON.parse(JSON.stringify(event))); //make deep copy
-    this.setState(
+    if (this.state.currentUser === 'admin' ||
+    Object.values(this.state.events.filter(event => event.planner === this.state.currentUser)).length > 0){
+      let prevUID = this.state.NEXT_EVENT_UID;
+      let copyEvents = this.state.events.map(event => JSON.parse(JSON.stringify(event))); //make deep copy
+      this.setState(
       {events: [...copyEvents, newEvt],
       NEXT_EVENT_UID: prevUID +1,}    //update the count after a new event added
     );
+    console.log('Added new event');
+
+    }
+    else{
+      console.log('Cannot add a new event, you have reached the max number of events.');
+
+    }
   }
 
   handleDeleteEvent(eventObj){
@@ -445,7 +454,10 @@ class App extends React.Component{
         {/* {adminOnly} */}
         {(this.state.currentUser === 'admin')
         ? <div>
-        <Typography variant="h2" component="div">
+          <div style ={{ display:"inline-block"}}>
+          <Card sx={{ minWidth: 275, maxWidth:500 }} style={{ margin:20 }} variant="outlined">
+          <CardContent>
+        <Typography variant="h3" color="orange" component="div">
          *Admin Only*
         </Typography>
         <Typography variant="body1" component="div">
@@ -501,8 +513,7 @@ class App extends React.Component{
         /><br/>
         </Box>
         </Typography>
-        <div style ={{ display:"inline-block"}}>
-          <Card sx={{ minWidth: 275, maxWidth:300 }} style={{ margin:20 }} variant="outlined">
+        </CardContent>
           <CardContent>
           <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
           File Upload/Download
