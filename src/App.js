@@ -201,7 +201,6 @@ class App extends React.Component{
       NEXT_EVENT_UID: initialData.NEXT_EVENT_UID,
       members: initialData.members, // a list of member objects
       events: initialData.events, //a list of event objects
-      displayedEvents: initialData.events,
       currentUser: "admin",
       fileDownloadUrl: null,
       fileInfo: "",
@@ -428,7 +427,6 @@ class App extends React.Component{
       {MAX_COINEM: event.target.value}
     );
   }
-
 
   render(){
   return (

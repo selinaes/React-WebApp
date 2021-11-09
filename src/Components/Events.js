@@ -283,56 +283,52 @@ class EventsPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      // displayedEvents: this.props.events,
       viewOption: 'all'
     };
     this.onSelectViewing = this.onSelectViewing.bind(this);
   }
 
 
-  // onSelectViewing(option){
-  //   switch (option){
-  //     case "all":
-  //       // this.setState({displayedEvents: this.props.events});
-  //       break;
-  //     case "self-planned":
-  //       let selfplannedEvents = this.props.events.filter(event => this.props.currentUser===event.planner).map(event => JSON.parse(JSON.stringify(event)));
-  //       this.setState({displayedEvents: selfplannedEvents});
-  //       break;
-  //     case "others-planned":
-  //       let othersEvents = this.props.events.filter(event => this.props.currentUser!==event.planner).map(event => JSON.parse(JSON.stringify(event)));
-  //       this.setState({displayedEvents: othersEvents});
-  //       break;
-  //     case "coinem-spent":
-  //       let mycoinem = this.props.members.find(member => member.username === this.props.currentUser).coinem;
-  //       let mycoinedList = Object.keys(mycoinem);
-  //       let coinedEvents = [];
-  //       mycoinedList.forEach(
-  //         item => {coinedEvents.push(JSON.parse(JSON.stringify(this.props.events.find(event => item===event.uid.toString()))))}
-  //       );
-  //       this.setState({displayedEvents: coinedEvents});
-  //       break;
-  //     case "coinem-not-spent":
-  //       let coinem = this.props.members.find(member => member.username === this.props.currentUser).coinem;
-  //       let coinedList = Object.keys(coinem);
-  //       let allUIDList = this.props.events.map(event => event.uid.toString());
-  //       let uncoinedList = allUIDList.filter(uid => !coinedList.includes(uid));
-  //       let notcoinedEvents = [];
-  //       uncoinedList.forEach(
-  //         item => {notcoinedEvents.push(JSON.parse(JSON.stringify(this.props.events.find(event => item===event.uid.toString()))))}
-  //       );
-  //       this.setState({displayedEvents: notcoinedEvents});
-  //   }
-  // }
-
- 
   onSelectViewing(option){
-    this.setState({viewOption:option});
+    this.setState({viewOption: option});
+  }
+
+  calculateDisplay(viewOption, events){
+    switch (viewOption){
+      case "all":
+        return events;
+      case "self-planned":
+        let selfplannedEvents = events.filter(event => this.props.currentUser===event.planner).map(event => JSON.parse(JSON.stringify(event)));
+        return selfplannedEvents;
+      case "others-planned":
+        let othersEvents = events.filter(event => this.props.currentUser!==event.planner).map(event => JSON.parse(JSON.stringify(event)));
+        return othersEvents;
+      case "coinem-spent":
+        let mycoinem = this.props.members.find(member => member.username === this.props.currentUser).coinem;
+        let mycoinedList = Object.keys(mycoinem);
+        let coinedEvents = [];
+        mycoinedList.forEach(
+          item => {coinedEvents.push(JSON.parse(JSON.stringify(events.find(event => item===event.uid.toString()))))}
+        );
+        return coinedEvents;
+      case "coinem-not-spent":
+        let coinem = this.props.members.find(member => member.username === this.props.currentUser).coinem;
+        let coinedList = Object.keys(coinem);
+        let allUIDList = events.map(event => event.uid.toString());
+        let uncoinedList = allUIDList.filter(uid => !coinedList.includes(uid));
+        let notcoinedEvents = [];
+        uncoinedList.forEach(
+          item => {notcoinedEvents.push(JSON.parse(JSON.stringify(events.find(event => item===event.uid.toString()))))}
+        );
+        return notcoinedEvents;
+    }
   }
 
   render() {
-    return <div>
-      
+    //calculate the latest filtered list at the render
+    const displayedEvents = this.calculateDisplay(this.state.viewOption, this.props.events);
+
+    return (<div>
       <div>
         <InputEvent 
           key = {this.props.NEXT_EVENT_UID+this.props.currentUser} 
@@ -343,7 +339,8 @@ class EventsPage extends React.Component {
         <h2 id="events">Events</h2>
           <RadioButtonsGroup currentUser = {this.props.currentUser} onChange={this.onSelectViewing}/>
           <div>
-            {this.props.events.map(
+            {displayedEvents.map( 
+
                 (event) => 
                 <Event 
                 evtObj = {event}
@@ -358,7 +355,7 @@ class EventsPage extends React.Component {
             }
           </div>
       </div>
-    </div>
+    </div>)
   }
 }
 
