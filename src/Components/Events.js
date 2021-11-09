@@ -56,7 +56,7 @@ class Event extends React.Component{
     let selfPlannedEvent;
     let coinedEvent;
      if (this.props.currentUser===this.props.evtObj.planner || this.props.currentUser === 'admin') {
-      selfPlannedEvent = true,
+      selfPlannedEvent = true;
       coinedEvent = false;
     } else { //event created by someone else
       selfPlannedEvent = false;
@@ -68,7 +68,7 @@ class Event extends React.Component{
     }
 
     return(
-      <div style ={{ display: this.state.shouldHide ? "none" : "inline-block"}} > 
+      <div style ={{ display: "inline-block"}} > 
         <ThemeProvider theme={theme}>
         <Card sx={{ maxWidth:350, minHeight:350 }} style={{ margin:20, padding:15}} variant="outlined">
           <CardContent>

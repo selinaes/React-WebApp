@@ -95,6 +95,12 @@ import Profile from "./Profile";
       );
     }
   }
+
+
+
+
+
+
   class SwitchUser extends React.Component {
     constructor(props){
       super(props);
@@ -154,6 +160,12 @@ import Profile from "./Profile";
       );
     }
   }
+
+
+
+
+
+
   const sortTypes = ['username', 'events planned', 'coinem spent'];
   class PeoplePage extends React.Component {
     constructor(props) {
@@ -162,7 +174,6 @@ import Profile from "./Profile";
       this.state =  {
         hide: true,
         sortBy: 'username',
-        sortedMembers: this.props.members
       };
 
       this.onAddUser = this.onAddUser.bind(this);
@@ -210,17 +221,23 @@ import Profile from "./Profile";
 
     sortMembers(e) {
       let sortType = e.target.value;
-      let sortedData = [...this.props.members] //default is to sort by member
+      this.setState( {sortBy: sortType} );
+    }
+
+    calculateSortedMembers(sortType, members){
+      let sortedData = [...members] //default is to sort by member
       if (sortType === 'events planned'){
-        sortedData = [...this.props.members].sort((a, b) => Object.values(this.props.events.filter(event => event.planner === b.username)).length - Object.values(this.props.events.filter(event => event.planner === a.username)).length);
+        sortedData = [...members].sort((a, b) => Object.values(this.props.events.filter(event => event.planner === b.username)).length - Object.values(this.props.events.filter(event => event.planner === a.username)).length);
       }
       else if (sortType === 'coinem spent'){
-        sortedData = [...this.props.members].sort((a, b) => this.calculateUserCoinem(b) - this.calculateUserCoinem(a));
+        sortedData = [...members].sort((a, b) => this.calculateUserCoinem(b) - this.calculateUserCoinem(a));
       }
-      this.setState( {sortBy: sortType, sortedMembers: sortedData } );
+      return sortedData;
     }
     
     render() {
+      const sortedMembers = this.calculateSortedMembers(this.state.sortBy, this.props.members);
+
       return (
         <div>
           <SwitchUser currentUser={this.props.currentUser} members= {this.props.members} onChange={this.onSwitch}/>
@@ -246,7 +263,7 @@ import Profile from "./Profile";
           {(this.props.currentUser !== 'admin')
         ?<div><br/><Button size="small" variant="contained" onClick={this.hideUsers}>{(this.state.hide)?"Show":"Hide"} other members</Button></div>
         :<div>
-        {this.state.sortedMembers.map(member => 
+        {sortedMembers.map(member => 
         (<Profile member={member}
           currentUser={this.props.currentUser}
           events={this.props.events}
@@ -269,7 +286,7 @@ import Profile from "./Profile";
         ))}
       </div>
         :<div>
-        {this.state.sortedMembers.map(member => 
+        {sortedMembers.map(member => 
         (<Profile member={member}
           currentUser={this.props.currentUser}
           events={this.props.events}
