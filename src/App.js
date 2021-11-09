@@ -584,6 +584,7 @@ class App extends React.Component{
         />
         <EventsPage 
         NEXT_EVENT_UID = {this.state.NEXT_EVENT_UID}
+        MAX_EVENTS = {this.state.MAX_EVENTS}
         currentUser = {this.state.currentUser}
         members = {this.state.members}
         events = {this.state.events}

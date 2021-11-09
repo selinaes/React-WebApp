@@ -208,25 +208,23 @@ class InputEvent extends React.Component {
                   multiline = "true"
                   minRows = "3"
                   label ="Description"
-                  value = {this.state.newEvent.newDescription}
+                  value = {this.state.newEvent.description}
                   onChange={this.handleNewDescription}
                        />
                     </FormControl>
               </CardContent>
               <CardActions style={{justifyContent: 'center'}}>
-                
               {(this.props.currentUser === 'admin' ||
-                  (Object.values(this.props.events.filter(event => event.planner === this.props.currentUser)).length) < this.props.MAX_EVENTS)? <div>
+                  (this.props.events.filter(event => event.planner === this.props.currentUser).length) < this.props.MAX_EVENTS )? <div>
               <Button variant="contained" onClick={this.onAddClick} startIcon={<EventIcon/>}>Add Event</Button> </div>
               : <p style={{color:'red'}}>You have planned the maximum number of events. Delete one to add a new one!</p>}
-                {/* must name a seperate click handler this.onAddClick here, because within render cannot call any function, 
-                cannot call this.props.xxx or will get into infinite loop*/}
               </CardActions>
             </Card>
             </div>
     );
   }
 }
+
 
 class RadioButtonsGroup extends React.Component {
   constructor(props) {
@@ -265,28 +263,23 @@ const sortTypes = ['uid', 'title', 'coinem spent'];
 class SortSelection extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {value: 'all'};
+    this.state = {value: 'uid'};
 
     this.handleChange = this.handleChange.bind(this);
   }
 
   handleChange(evt){
     this.props.onChange(evt);
+    this.setState({value: evt.target.value});
   }
 
   render(){
     return (<FormControl size='medium' style={{width:'15%'}}>
-                  <InputLabel id="sort" >Sort By</InputLabel>
-                      <Select variant='outlined'
-                        labelId="sort"
-                        id="sort"
-                        // value={updateUser}
-                        label="Sort By"
-                        onChange={evt => this.handleChange(evt)}
-                      >
+              <InputLabel id="sort" >Sort By</InputLabel>
+                 <Select variant='outlined' labelId="sort" id="sort" value={this.state.value} label="Sort By" onChange={evt => this.handleChange(evt)}>
                         {sortTypes.map(type => <MenuItem key={type} value={type}>{type}</MenuItem>)}
-                      </Select>
-             </FormControl>)
+                 </Select>
+            </FormControl>)
   }
 }
 
@@ -314,6 +307,9 @@ class EventsPage extends React.Component {
   }
 
   calculateDisplay(viewOption, events){
+    if (this.props.currentUser === 'admin'){
+      viewOption = 'all';
+    }
     switch (viewOption){
       case "all":
         return events;
@@ -379,7 +375,6 @@ class EventsPage extends React.Component {
           <RadioButtonsGroup currentUser = {this.props.currentUser} onChange={this.onSelectViewing}/>
           <div>
             {sortedEvents.map( 
-
                 (event) => 
                 <Event 
                 evtObj = {event}
