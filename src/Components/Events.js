@@ -189,6 +189,9 @@ class InputEvent extends React.Component {
   
   onAddClick(e){
     e.preventDefault();
+    if ( this.state.newEvent.title.length===0 || this.state.newEvent.description.length===0){
+      alert('Please make sure title/description is not empty!');
+    } else{
     this.props.addEvent(this.state.newEvent); //can only call props.method here, not in render(), else get into infinite loop
     this.setState({
       newEvent: {
@@ -198,6 +201,7 @@ class InputEvent extends React.Component {
         "planner": this.props.planner,
       }
     })
+    }
   }
 
   render () {
