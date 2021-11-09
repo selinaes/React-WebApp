@@ -42,45 +42,6 @@ const theme = createTheme({
 
 //child component of EventPage, displaying a single event
 class Event extends React.Component{
-  constructor(props) {
-    super(props)
-    this.state = {
-      shouldHide : false,
-      selfPlannedEvent: false,
-      coinedEvent: false
-    }
-  }
-
-  componentDidMount(){
-    console.log("mounted!")
-    //Events created by the currentUser
-    if (this.props.currentUser===this.props.evtObj.planner || this.props.currentUser === 'admin') {
-      this.setState(
-      {selfPlannedEvent : true,
-      coinedEvent : false,});
-    } else { //event created by someone else
-      this.setState({selfPlannedEvent : false});
-      if (this.props.members.find(member => member.username === this.props.currentUser).coinem[this.props.evtObj.uid] !== undefined){ //already Coined
-        this.setState({coinedEvent : true});
-      } else { //not yet coined
-        this.setState({coinedEvent : false});
-      }
-    }
-
-
-    if (this.props.viewOption === 'all'){
-      this.setState({shouldHide: false});
-    } else if (this.props.viewOption === 'self-planned' && !this.state.selfPlannedEvent){
-      this.setState({shouldHide: true});
-    } else if (this.props.viewOption === 'others-planned' && this.state.selfPlannedEvent){
-      this.setState({shouldHide: true});
-    } else if (this.props.viewOption === 'coinem-spent' && !this.state.coinedEvent){
-      this.setState({shouldHide: true});
-    }else if (this.props.viewOption === 'coinem-not-planned' && this.state.coinedEvent){
-      this.setState({shouldHide: true});
-    }
-  }
-
 
   render(){
     let sponsorCoinsPair = {};
@@ -92,7 +53,19 @@ class Event extends React.Component{
     let totalMembers = sponsors.length;
     let totalCoinems = coinems.reduce((n,sum)=>n+sum,0)
 
-    
+    let selfPlannedEvent;
+    let coinedEvent;
+     if (this.props.currentUser===this.props.evtObj.planner || this.props.currentUser === 'admin') {
+      selfPlannedEvent = true,
+      coinedEvent = false;
+    } else { //event created by someone else
+      selfPlannedEvent = false;
+      if (this.props.members.find(member => member.username === this.props.currentUser).coinem[this.props.evtObj.uid] !== undefined){ //already Coined
+        coinedEvent = true;
+      } else { //not yet coined
+        coinedEvent = false;
+      }
+    }
 
     return(
       <div style ={{ display: this.state.shouldHide ? "none" : "inline-block"}} > 
@@ -146,8 +119,8 @@ class Event extends React.Component{
             </Paper>
           </CardContent>
           <CardActions style={{justifyContent: 'center',m:10} }>
-          {this.state.selfPlannedEvent && <AlertDialog onDelete={this.props.onDelete} />}
-          {(!this.state.selfPlannedEvent && !this.state.coinedEvent) && <Button variant="contained" onClick={()=>this.props.onCoinit(num)} startIcon={<MonetizationOnIcon/>}>Coin'it</Button>}
+          {selfPlannedEvent && <AlertDialog onDelete={this.props.onDelete} />}
+          {(!selfPlannedEvent && !coinedEvent) && <Button variant="contained" onClick={()=>this.props.onCoinit(num)} startIcon={<MonetizationOnIcon/>}>Coin'it</Button>}
           </CardActions>
           </Card>
           </ThemeProvider>
