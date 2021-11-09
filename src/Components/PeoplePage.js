@@ -243,13 +243,13 @@ import Profile from "./Profile";
           <SwitchUser currentUser={this.props.currentUser} members= {this.props.members} onChange={this.onSwitch}/>
           <AddUser onClick = {this.onAddUser} />
           <h2 id="members">Members</h2>
-          <FormControl size='medium' style={{width:'10%'}}>
-                  <InputLabel id="sort">Sort By</InputLabel>
+          <FormControl size='medium' style={{width:'15%'}}>
+                  <InputLabel id="sort" >Sort By</InputLabel>
                       <Select variant='outlined'
                         labelId="sort"
                         id="sort"
                         // value={updateUser}
-                        label="Sort"
+                        label="Sort By"
                         onChange={evt => this.sortMembers(evt)}
                       >
                         {sortTypes.map(type => <MenuItem

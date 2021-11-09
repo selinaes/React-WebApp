@@ -1,7 +1,7 @@
 import React from 'react'
 import AlertDialog from './Delete';
 import { Badge, Card, CardContent, Chip, IconButton, Paper, Typography, TextField, CardActions, Button, FormControl, 
-  FormControlLabel, Radio, RadioGroup } from '@mui/material';
+  FormControlLabel, Radio, RadioGroup, InputLabel, Select, MenuItem } from '@mui/material';
 
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 
@@ -39,19 +39,23 @@ const theme = createTheme({
   },
 });
 
+function calculateEventCoinem(evtObj, members){
+  let sponsorCoinsPair = {};
+  let num = evtObj.uid;
+  let sponsorsList = members.filter(member => member.coinem[num] !== undefined);
+  sponsorsList.map( member => sponsorCoinsPair[member.username] = member.coinem[num]);
+  let sponsors = Object.keys(sponsorCoinsPair);
+  let coinems = Object.values(sponsorCoinsPair);
+  return [sponsors, coinems];
+}
 
 //child component of EventPage, displaying a single event
 class Event extends React.Component{
 
   render(){
-    let sponsorCoinsPair = {};
-    let num = this.props.evtObj.uid;
-    let sponsorsList = this.props.members.filter(member => member.coinem[num] !== undefined);
-    sponsorsList.map( member => sponsorCoinsPair[member.username] = member.coinem[num]);
-    let sponsors = Object.keys(sponsorCoinsPair);
-    let coinems = Object.values(sponsorCoinsPair);
-    let totalMembers = sponsors.length;
-    let totalCoinems = coinems.reduce((n,sum)=>n+sum,0)
+    const [sponsors,coinems] = calculateEventCoinem(this.props.evtObj, this.props.members);
+    const totalMembers = sponsors.length;
+    const totalCoinems = coinems.reduce((n,sum)=>n+sum,0)
 
     let selfPlannedEvent;
     let coinedEvent;
@@ -94,11 +98,11 @@ class Event extends React.Component{
                   let minusCoin;
                    if (item === this.props.currentUser) {
                     addCoin = 
-                    <IconButton aria-label="add" size="small" onClick={()=>this.props.onAddCoin(num)}>
+                    <IconButton aria-label="add" size="small" onClick={()=>this.props.onAddCoin(this.evtObj.uid)}>
                     <AddCircleOutlineIcon />
                     </IconButton>;
                     minusCoin =
-                    <IconButton aria-label="minus" size="small" onClick={()=>this.props.onMinusCoin(num)}>
+                    <IconButton aria-label="minus" size="small" onClick={()=>this.props.onMinusCoin(this.evtObj.uid)}>
                     <RemoveCircleOutlineIcon />
                     </IconButton>;
                   }
@@ -120,7 +124,7 @@ class Event extends React.Component{
           </CardContent>
           <CardActions style={{justifyContent: 'center',m:10} }>
           {selfPlannedEvent && <AlertDialog onDelete={this.props.onDelete} />}
-          {(!selfPlannedEvent && !coinedEvent) && <Button variant="contained" onClick={()=>this.props.onCoinit(num)} startIcon={<MonetizationOnIcon/>}>Coin'it</Button>}
+          {(!selfPlannedEvent && !coinedEvent) && <Button variant="contained" onClick={()=>this.props.onCoinit(this.evtObj.uid)} startIcon={<MonetizationOnIcon/>}>Coin'it</Button>}
           </CardActions>
           </Card>
           </ThemeProvider>
@@ -256,19 +260,57 @@ class RadioButtonsGroup extends React.Component {
   }
 }
 
+
+const sortTypes = ['uid', 'title', 'coinem spent'];
+class SortSelection extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {value: 'all'};
+
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(evt){
+    this.props.onChange(evt);
+  }
+
+  render(){
+    return (<FormControl size='medium' style={{width:'15%'}}>
+                  <InputLabel id="sort" >Sort By</InputLabel>
+                      <Select variant='outlined'
+                        labelId="sort"
+                        id="sort"
+                        // value={updateUser}
+                        label="Sort By"
+                        onChange={evt => this.handleChange(evt)}
+                      >
+                        {sortTypes.map(type => <MenuItem key={type} value={type}>{type}</MenuItem>)}
+                      </Select>
+             </FormControl>)
+  }
+}
+
 //parent component for all of the Events + AddEvent
 class EventsPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      viewOption: 'all'
+      viewOption: 'all',
+      sortBy: 'uid'
     };
     this.onSelectViewing = this.onSelectViewing.bind(this);
+    this.onSorting = this.onSorting.bind(this);
+    this.calculateDisplay = this.calculateDisplay.bind(this);
+    this.calculateSortedEvents = this.calculateSortedEvents.bind(this);
   }
 
 
   onSelectViewing(option){
     this.setState({viewOption: option});
+  }
+
+  onSorting(e){
+    this.setState( {sortBy: e.target.value} );
   }
 
   calculateDisplay(viewOption, events){
@@ -302,9 +344,24 @@ class EventsPage extends React.Component {
     }
   }
 
+  calculateSortedEvents(sortType, events){
+    let sortedEvents;
+    if (sortType === 'uid'){
+      sortedEvents = [...events].sort((a, b) => a.uid-b.uid);
+    }
+    else if (sortType === 'title'){
+      sortedEvents = [...events].sort((a, b) => (a.title<b.title)? -1:1);
+    }
+    else if (sortType === 'coinem spent'){
+      sortedEvents = [...events].sort((a, b) => calculateEventCoinem(b,this.props.members)[1].reduce((n,sum)=>n+sum,0) - calculateEventCoinem(a,this.props.members)[1].reduce((n,sum)=>n+sum,0) );
+    }
+    return sortedEvents;
+  }
+
   render() {
     //calculate the latest filtered list at the render
     const displayedEvents = this.calculateDisplay(this.state.viewOption, this.props.events);
+    const sortedEvents = this.calculateSortedEvents(this.state.sortBy, displayedEvents);
 
     return (<div>
       <div>
@@ -318,9 +375,10 @@ class EventsPage extends React.Component {
           MAX_EVENTS={this.props.MAX_EVENTS}
         />
         <h2 id="events">Events</h2>
+          <SortSelection onChange={this.onSorting}/>
           <RadioButtonsGroup currentUser = {this.props.currentUser} onChange={this.onSelectViewing}/>
           <div>
-            {displayedEvents.map( 
+            {sortedEvents.map( 
 
                 (event) => 
                 <Event 
