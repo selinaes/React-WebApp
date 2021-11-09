@@ -3,7 +3,31 @@
 ## Design and Implementation
 explain (at a high level) the key design and implementation decisions you made; in cases where you made a choice, explain *why* you made that choice
 ### React Component Structure
-Decision to break up code into components in order to make it easier to understand
+Decision to break up code into components:
+
+A key aspect of React is to break down functionalities into smaller parts called "components", smaller components both returns their part of the UI to the parent component they are in, but also deal with certain behaviors strictly within their scope of concern. As Jordan Walke mentioned in his video, React enables engineers to define their components and achieve the separation of concerns (although as newbies our understanding of SoC must be shallow). 
+
+We organized the body of our Join'em Web App into an App.js file, within which we have three major components: 
+- NavBar: navigating to a part of the page
+- PeoplePage: members-related
+- EventsPage: events-related
+
+Within the App component, we also had a chunk of codes related to file upload/download, and we would like to separate it out if we had time. 
+
+PeoplePage is responsible for all functionalities related to members, within which we have three major child components:
+- SwitchUser: become another member
+- AddUser: add new member
+- Profile: display individual members
+
+EventsPage is responsible for all functionalities related to events, within which we have four child components:
+- InputEvent: adding new event from input
+- SortSelection: select a way to sort events
+- RadioButtonsGroup: members may select a category to filter events
+- Event: display of individual events
+
+Breaking down a large chunk of code into smaller self-contained components make our code more understandable in collaboration, but even more, it makes our picture of the app clearer, and each component is easy to reuse whenever needed. 
+
+
 ### Conditional Rendering
 distinguishes between admin and regular member features
 #### Security for admin-only behaviors
