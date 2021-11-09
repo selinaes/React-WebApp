@@ -1,7 +1,7 @@
 import React from 'react'
 import AlertDialog from './Delete';
 import { Badge, Card, CardContent, Chip, IconButton, Paper, Typography, TextField, CardActions, Button, FormControl, 
-  FormControlLabel, Radio, RadioGroup, InputLabel, Select, MenuItem } from '@mui/material';
+  FormControlLabel, Radio, RadioGroup, InputLabel, Select, Stack, MenuItem } from '@mui/material';
 
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 
@@ -51,6 +51,25 @@ function calculateEventCoinem(evtObj, members){
 
 //child component of EventPage, displaying a single event
 class Event extends React.Component{
+  constructor(props){
+    super(props);
+    this.state =  {
+      editing: false,
+      editedEvent: {
+        "uid": 0,
+        "title": '',
+        "description": '',
+        "planner": ''
+      }
+    }
+    this.checkCoinemMax = this.checkCoinemMax.bind(this);
+    this.checkCoinemZero = this.checkCoinemZero.bind(this);
+    this.handleChangeTitle = this.handleChangeTitle.bind(this);
+    this.handleChangeDescription = this.handleChangeDescription.bind(this);
+    this.onEdit = this.onEdit.bind(this);
+    this.onConfirm = this.onConfirm.bind(this);
+  }
+
   checkCoinemMax(){
     const coin = this.props.members.find(member => member.username === this.props.currentUser).coinem[this.props.evtObj.uid];
     if (coin < this.props.MAX_COINEM_PER_EVENT){
@@ -66,6 +85,42 @@ class Event extends React.Component{
       return false;
     } else {
       return true;
+    }
+  }
+
+  handleChangeTitle(e){
+    this.setState({
+      editedEvent: {...this.state.editedEvent, title : e.target.value}
+    });
+  }
+
+  handleChangeDescription(e){
+    this.setState({
+      editedEvent: {...this.state.editedEvent, description : e.target.value}
+    });
+  }
+
+  onEdit(){
+    this.setState({
+      editing: true,
+      editedEvent: this.props.evtObj
+    });
+  }
+
+  onConfirm(){
+    if ( this.state.editedEvent.title.length===0 || this.state.editedEvent.description.length===0){
+      alert('Please make sure title/description is not empty!');
+    } else{
+    this.props.editEvent(this.state.editedEvent); 
+    this.setState({
+      editing: false,
+      editedEvent:  {
+        "uid": 0,
+        "title": '',
+        "description": '',
+        "planner": ''
+      }
+    });
     }
   }
 
@@ -97,14 +152,47 @@ class Event extends React.Component{
             <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                 Event { this.props.evtObj.uid }
             </Typography>
-            <Typography variant="h5" component="div">
+            {this.state.editing ? 
+              <div>
+              <FormControl fullWidth>
+                  <TextField
+                  required
+                  id="title"
+                  label = "Title"
+                  sx = {{m: 2}}
+                  value = {this.state.editedEvent.title}
+                  onChange={this.handleChangeTitle}
+                       />
+                    </FormControl>
+              </div>
+             : 
+              <Typography variant="h5" component="div">
                   {this.props.evtObj.title}
             </Typography>
+            }
+            
             <Chip sx={{ m: 0.5 }} icon={<FaceIcon />} label={totalMembers+" Members"} variant="outlined" />
             <Chip sx={{ m: 0.5 }}icon={<MonetizationOnIcon />} label={totalCoinems+" Coinems"} variant="outlined" />
+            {this.state.editing ? 
+              <div>
+              <FormControl fullWidth>
+                  <TextField
+                  required
+                  id="title"
+                  label = "Description"
+                  multiline = "true"
+                  minRows = "3"
+                  sx = {{m: 2}}
+                  value = {this.state.editedEvent.description}
+                  onChange={this.handleChangeDescription}
+                       />
+                    </FormControl>
+              </div>
+             : 
             <Typography variant="body2">
                 { this.props.evtObj.description }
             </Typography>
+            }
             <Typography sx={{ fontSize: 16 }} color="orange" gutterBottom>
                 planner: { this.props.evtObj.planner }
             </Typography>
@@ -141,7 +229,13 @@ class Event extends React.Component{
             </Paper>
           </CardContent>
           <CardActions style={{justifyContent: 'center',m:10} }>
-          {selfPlannedEvent && <AlertDialog onDelete={this.props.onDelete} />}
+          {(selfPlannedEvent && !this.state.editing) && <Stack spacing={2} direction="row">
+            <AlertDialog onDelete={this.props.onDelete} />
+            <Button variant="contained" onClick={this.onEdit} >Edit</Button>
+            </Stack>}
+          {this.state.editing && <Stack spacing={2} direction="row">
+            <Button variant="contained" onClick={this.onConfirm} >Confirm</Button>
+            </Stack>}
           {(!selfPlannedEvent && !coinedEvent) && <Button variant="contained" onClick={()=>this.props.onCoinit(this.props.evtObj.uid)} startIcon={<MonetizationOnIcon/>}>Coin'it</Button>}
           </CardActions>
           </Card>
@@ -368,7 +462,7 @@ class EventsPage extends React.Component {
       sortedEvents = [...events].sort((a, b) => a.uid-b.uid);
     }
     else if (sortType === 'title'){
-      sortedEvents = [...events].sort((a, b) => (a.title<b.title)? -1:1);
+      sortedEvents = [...events].sort((a, b) => (a.title.toLowerCase()<b.title.toLowerCase())? -1:1);
     }
     else if (sortType === 'coinem spent'){
       sortedEvents = [...events].sort((a, b) => calculateEventCoinem(b,this.props.members)[1].reduce((n,sum)=>n+sum,0) - calculateEventCoinem(a,this.props.members)[1].reduce((n,sum)=>n+sum,0) );
@@ -408,6 +502,7 @@ class EventsPage extends React.Component {
                 onMinusCoin = {this.props.onMinusEvtCoin}
                 onCoinit ={this.props.onCoinit}
                 viewOption = {this.props.viewOption}
+                editEvent = {this.props.editEvent}
                 />)
             }
           </div>

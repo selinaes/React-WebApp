@@ -210,6 +210,7 @@ class App extends React.Component{
     this.addHandler = this.addHandler.bind(this);
     this.deleteHandler = this.deleteHandler.bind(this);
     this.handleAddEvent = this.handleAddEvent.bind(this);
+    this.handleEditEvent = this.handleEditEvent.bind(this);
     this.handleDeleteEvent = this.handleDeleteEvent.bind(this);
     this.handleAddEvtCoin = this.handleAddEvtCoin.bind(this);
     this.handleMinusEvtCoin = this.handleMinusEvtCoin.bind(this);
@@ -281,6 +282,13 @@ class App extends React.Component{
       console.log('Cannot add a new event, you have reached the max number of events.');
 
     }
+  }
+
+  handleEditEvent(evtObj){
+    let otherEvents = this.state.events.filter(event => event.uid !== evtObj.uid).map(event => JSON.parse(JSON.stringify(event)));
+    this.setState(
+      {events: [...otherEvents, evtObj]}
+    );
   }
 
   handleDeleteEvent(eventObj){
@@ -631,6 +639,7 @@ class App extends React.Component{
         onAddEvtCoin = {this.handleAddEvtCoin}
         onMinusEvtCoin = {this.handleMinusEvtCoin}
         onCoinit = {this.handleCoinit}
+        editEvent = {this.handleEditEvent}
         />
       <p style={{padding:"5%"}}>joining'em since 2021</p>
     </div>
