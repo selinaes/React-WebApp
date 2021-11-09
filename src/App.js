@@ -418,23 +418,60 @@ class App extends React.Component{
 
   handleChangeMAX_EVENT(event){
     event.preventDefault();
-    this.setState(
+    if (event.target.value >= this.checkMaxPlannedEvents()){
+      this.setState(
       {MAX_EVENTS: event.target.value}
     );
+    } else {
+      alert("Lowering limit is not applicable, delete events first!");
+    }
+  }
+
+  checkMaxPlannedEvents(){
+    let plannedNum = [];
+    plannedNum = this.state.members.map(member => {
+      let plannedEvents = this.state.events.filter(event => event.planner === member.username);
+      return plannedEvents.length});
+    let max = plannedNum.reduce((a,b)=> Math.max(a,b),0)
+    return max;
   }
 
   handleChangeMAX_COINEM_PER_EVENT(event){
     event.preventDefault();
+    if (event.target.value >= this.checkMaxEventCoinem()){
     this.setState(
       {MAX_COINEM_PER_EVENT: event.target.value}
-    );
+      );
+    } else {
+      alert("Lowering limit is not applicable, delete events first!");
+    }
+  }
+
+  checkMaxEventCoinem(){
+    let coinNum = [];
+    this.state.members.forEach(member => {
+      coinNum.push(...Object.values(member.coinem))});
+    let max = coinNum.reduce((a,b)=> Math.max(a,b),0);
+    return max;
   }
 
   handleChangeMAX_COINEM(event){
     event.preventDefault();
+    if (event.target.value >= this.checkMaxCoinem()){
     this.setState(
       {MAX_COINEM: event.target.value}
     );
+    } else {
+      alert("Lowering limit is not applicable, delete events first!");
+    }
+  }
+
+  checkMaxCoinem(){
+    let coinNum = [];
+    coinNum = this.state.members.map(member => {
+      return Object.values(member.coinem).reduce((n,sum)=>n+sum,0)});
+    let max = coinNum.reduce((a,b)=> Math.max(a,b),0);
+    return max;
   }
 
   render(){

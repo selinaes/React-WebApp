@@ -48,10 +48,6 @@ function calculateEventCoinem(evtObj, members){
   let coinems = Object.values(sponsorCoinsPair);
   return [sponsors, coinems];
 }
-function checkCoinemMax(username, evtObj, members){
-  
-  
-}
 
 //child component of EventPage, displaying a single event
 class Event extends React.Component{
