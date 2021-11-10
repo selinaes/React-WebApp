@@ -25,19 +25,49 @@ EventsPage is responsible for all functionalities related to events, within whic
 - RadioButtonsGroup: members may select a category to filter events
 - Event: display of individual events
 
-Breaking down a large chunk of code into smaller self-contained components make our code more understandable in collaboration, but even more, it makes our picture of the app clearer, and each component is easy to reuse whenever needed. 
+Breaking down a large chunk of code into smaller self-contained components make our code more understandable in collaboration, but even more, it makes our picture of the app clearer, and each component is easy to reuse whenever needed. We also got to practice with information flow between components, which is crucial in React.
 
 
 ### Conditional Rendering
-distinguishes between admin and regular member features
-#### Security for admin-only behaviors
-Preventing regular users from having priviledges of an admin and ability to add or delete events/users that are not their own
-#### Coin'it and Delete buttons for different user/event relationship
-When displaying each event, we used conditional rendering, specifically logical && operator to make sure:
-(1) only planner can delete their own event, and 
-(2) only non-planner can "coin'it" events they have not yet coined (coinems for already coined event will be modified through -/+ buttons)
+We used conditional rendering in several places, specifically deciding what to display based on the status/identity of the current user.
+#### A.Security for admin-only behaviors
+Preventing regular users from having priviledges of an admin: file upload/download, seeing and changing global variables, and ability to add or delete events/users that are not their own.
+#### B.Different Event actions based on coinem status/planner status
+Within each event's display, UI differs a bit from user to user, depending on what they have done/could do to the events. Here, we used logical && operator to conditionally render these buttons to make sure:
+1. only planner can delete & edit their own event (in addition to admin)
+2. only non-planner can "coin'it" events they have not yet coined 
+3. only after a member already "coined" a event, can they edit coinems through -/+ buttons
+
+We designed the possible actions on events to display in a straight-forward manner. Users don't need to think twice to understand what they can and cannot do. Examples of such user-friendly design includes:
+- Editing events at their own place, rather than a separate editing box
+- The chip showing the current user/spent coinem pair is surrounded by two -/+ icon buttons to edit the coinem, making it clear:
+    - they can only edit their own coinem, not others'
+    - which event they are changing coinem for
+    - what's the current coinem value
+- Delete and Edit buttons are only visible for one's own events
+- Once start editing, the two buttons are replaced by a confirm button, prompting the user to save the change before other actions
+- A 'Coin'it' button is displayed when one is not the planner, and has not yet coined the event
+
+
 ### State and Props
-when we chose to use state (eg App.js) and when we chose to use propsng 
+#### 1.Stateful component & lifting states up
+To avoid complication, we stick to the "single source of truth" principle and stored key information only in one place. Whenever two or more components need to use the same piece of changing information, we lift the states up to their closest common ancestor.
+
+All the members, events, and global variables, are stored in states of 'App' component. Thus, any changes are done on this copy, and the result is passed down to child components as props. 
+
+Certain child components also have states, but their state has nothing to do with their parents, or other components, so it does not violate the one information source principle. 
+
+Generally, input components have states to keep track of the current value of input, before these values are handled by the passed down functions from parent through props:
+- Event: state for editing status & editedEvent
+- InputEvent: state for new event entries
+- AddUser: state for new user entries
+- RadioButtonGroup: state for current selection
+- SortSelection: state for current selection
+
+In addition, EventsPage and PeoplePage both have states for current sorting options AND/OR filtering categories, which only affects their own display but not other parts of the app. 
+
+#### 2.What props we passed
+when we chose to use state (eg App.js) and when we chose to use props
 keeping all info in one place & using states to manage them
 when to lift states up and when not to
 deep vs shallow copying
@@ -67,4 +97,5 @@ describe any features that don’t work quite right in your submitted implementa
 3. Update Nav Bar depending on the current user and their Join'em access priviledges.
 4. Modularize every aspect of the app into components, rather than having massive files with every aspect.
 5. Add more security features, such as warning a user when they cannot complete an action and explaining why they cannot complete a specific action (e.g. a message when trying to add a user with a username that has already been used rather than just a console.log message).
+6. Remove the chip of a user/coinem pair from Event if one decreases coinem to 0, rather than just disable the - button.
 
