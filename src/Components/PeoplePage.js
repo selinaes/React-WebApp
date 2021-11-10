@@ -196,9 +196,9 @@ import Profile from "./Profile";
     onAddUser(newUser){
       let usernames = this.props.members.map(member => member.username);
       if (usernames.indexOf(newUser.username) !== -1){
-        console.log("Error: Cannot add another user with username: ", newUser.username)
+        alert("Error: Cannot add another user with username: ", newUser.username)
       } else {
-        console.log("Added new user")
+        alert("Added new user")
         this.props.addHandler(newUser)}
     }
 
