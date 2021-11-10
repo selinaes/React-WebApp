@@ -113,7 +113,7 @@ Since all coinem info are saved in members objects, calculating coinems for even
 ### Sync original data & displayed data
 When we added sorting for both members and events, and category filtering for events, we created copies of original lists as a separate state guiding what to display. This approach brought one problem: changes on original data (add/delete) won't be reflected on a selected display without refreshing the page. 
 
-To solve the syncing of original and display data, we no longer save displayed data as separate states, but only save the sorting/filtering option in states. We used a helper method that takes in (1)sorting/filtering option (2)original list, and return a filtered/sorted list. Then, we re-calculate a sorted/filtered list at the render using the latest original list & the current sorting/filtering option.
+To solve the syncing of original and display data, we no longer save displayed data as separate states, but only save the sorting/filtering option in states. We used a helper method that takes in (1)sorting/filtering option (2)original list, and returns a filtered/sorted list. Then, we call this method to re-calculate a sorted/filtered list at the render, using the latest original list & the current sorting/filtering option. In this way, added/deleted/edited events can be reflected immediately to the sorted/filtered view, without having to refresh.
 
 
 ## Incomplete Code
@@ -123,7 +123,10 @@ At the moment, the following features work inconsistently or are otherwise flawe
 ## Wish List of New Features
 1. Customize alert dialog to be include a more specific warning with information on the user / event being deleted. Replace basic javascript alerts with MUI alert dialogs.
 2. Give each new user a different color and use that color to represent them whenever their username is referred to.
-3. Update Nav Bar depending on the current user and their Join'em access priviledges.
-4. Modularize every aspect of the app into components, rather than having massive files with every aspect.
-5. Remove the chip of a user/coinem pair from Event if one decreases coinem to 0, rather than just disable the - button.
+3. Update Nav Bar depending on the current user and their Join'em access priviledges. Make the NavBar hanging on top of the screen all the time.
+4. Modularize every aspect of the app into components (ex.EditGlobalVariables, FileUploadDownload), rather than having massive files with every aspect.
+5. Remove the chip of a user/coinem pair from Event if one decreases coinem to 0, rather than just disable the "-" button.
+6. Improve the UI for each member's event:coinem pairs, as well as the display of coinem spent/left and events planned/left.
+7. Use Dialogue window to display warnings that global variables cannot be lowered, rather than the current alert.
+
 
