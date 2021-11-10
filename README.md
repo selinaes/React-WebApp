@@ -1,7 +1,7 @@
 # CS 317 Homework 3: Join'em
 #### Sara Clark and Jiawei Liu | November 2021
 ## Design and Implementation
-explain (at a high level) the key design and implementation decisions you made; in cases where you made a choice, explain *why* you made that choice
+
 ### React Component Structure
 Decision to break up code into components:
 
@@ -75,7 +75,7 @@ React determines whether to rerender a component based on whether its states or 
 For these cases, we make sure to make copies of the original list, using spread, map, filter, etc. Certain times, we use JSON.stringify & JSON.parse to make sure that every individual object inside of the list is copied, so we create a deep copy with different objects, not just shallow copies with a new list structure but point to the old objects. 
 
 #### 4.Object methods
-Object.value/Object.key and reducing
+We used Object.value and Object.key when working with coinem and often counted the number of coinem using reducing on the lists of values or keys. This allowed for more efficiency in our code and utilized the preexisting structure of the data.
 
 
 
@@ -83,16 +83,22 @@ Object.value/Object.key and reducing
 ## Noteworthy Aspects
 
 ### Material UI
-usage of MUI
-icons, cards, nested mapping, pop-up dialog, spinning sun logo, drop down inputs, text inputs, buttons, 
+We used Material UI for almost every component of the display. Some features to take note of are:
+1) icons
+2) cards
+4) pop-up dialogs
+5) spinning sun logo
+6) drop down inputs
+7) text inputs
+8) buttons
+9) chips
+10) badges
+Many of these features were implemented using mapping and at times even nested mapping or both filtering and mapping.
 ### Modularization
-We restructured everything to be more professional and readable
+We restructured much of the code to be more professional and readable, breaking down repeated elements (e.g. Profile) into individual files and 
 ### Navigation Bar
-Links to components in page
+The navigation bar links to main components of the page for easily moving from one feature to another.
 
-
-explain (at a high level) noteworthy aspects of your app code for each screen. Do not explain low-level aspects of the app code, only high-level bits that may not be obvious. (Non-obvious low-level details should be expressed in code comments.)
-describe any features that don’t work quite right in your submitted implementation.
 
 ## Incomplete Code
 At the moment, the following features work inconsistently or are otherwise flawed:
