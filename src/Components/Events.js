@@ -40,9 +40,9 @@ const theme = createTheme({
 });
 
 function calculateEventCoinem(evtObj, members){
-  let sponsorCoinsPair = {};
   let num = evtObj.uid;
-  let sponsorsList = members.filter(member => member.coinem[num] !== undefined);
+  let sponsorsList = members.filter(member => member.coinem[num] !== undefined);  
+  let sponsorCoinsPair = {};
   sponsorsList.map( member => sponsorCoinsPair[member.username] = member.coinem[num]);
   let sponsors = Object.keys(sponsorCoinsPair);
   let coinems = Object.values(sponsorCoinsPair);
@@ -424,6 +424,9 @@ class EventsPage extends React.Component {
   }
 
   calculateDisplay(viewOption, events){
+    //this condition is to ensure that: if a viewOption is selected but the member switch identity back to admin, all events can be displayed in the admin-view
+    //Otherwise, admin don't have a user profile/spent coinems etc, so will run into error
+    //when the admin switch identity to another user, the previous viewOption before switching to admin still apply.
     if (this.props.currentUser === 'admin'){
       viewOption = 'all';
     }

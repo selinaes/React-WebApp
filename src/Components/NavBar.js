@@ -12,6 +12,7 @@ export default function ButtonAppBar() {
           <Button href="#events" color="inherit" align="right">Events</Button>
           <Button href="#members" color="inherit">Members</Button>
           <Button href="#switchUser" color="inherit">Switch Profile</Button>
+          <Button href="#addEvent" color="inherit">Add Event</Button>
           <Button href="#addUser" color="inherit">Add Member</Button>
         </Toolbar>
       </AppBar>
