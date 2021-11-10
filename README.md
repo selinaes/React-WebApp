@@ -85,19 +85,29 @@ We used Object.value and Object.key when working with coinem and often counted t
 ### Material UI
 We used Material UI for almost every component of the display. Some features to take note of are:
 1) icons
-2) cards
+2) iconButtons
+3) cards
 4) pop-up dialogs
 5) spinning sun logo
 6) drop down inputs
 7) text inputs
 8) buttons
-9) chips
-10) badges
+9) radio & radiogroup
+10) chips
+11) badges
 Many of these features were implemented using mapping and at times even nested mapping or both filtering and mapping.
+
+Theme
 ### Modularization
-We restructured much of the code to be more professional and readable, breaking down repeated elements (e.g. Profile) into individual files and 
+We restructured much of the code to be more professional and readable, breaking down repeated elements (e.g. Profile/Event) into individual components. 
 ### Navigation Bar
 The navigation bar links to main components of the page for easily moving from one feature to another.
+### Calculate coinem info from members & nested mapping
+
+### Sync original data & displayed data
+When we added sorting for both members and events, and category filtering for events, we created copies of original lists as a separate state guiding what to display. This approach brought one problem: changes on original data (add/delete) won't be reflected on a selected display without refreshing the page. 
+
+To solve the syncing of original and display data, we no longer save displayed data as separate states, but only save the sorting/filtering option in states. We used a helper method that takes in (1)sorting/filtering option (2)original list, and return a filtered/sorted list. Then, we re-calculate a sorted/filtered list at the render using the latest original list & the current sorting/filtering option.
 
 
 ## Incomplete Code
