@@ -75,7 +75,7 @@ React determines whether to rerender a component based on whether its states or 
 For these cases, we make sure to make copies of the original list, using spread, map, filter, etc. Certain times, we use JSON.stringify & JSON.parse to make sure that every individual object inside of the list is copied, so we create a deep copy with different objects, not just shallow copies with a new list structure but point to the old objects. 
 
 #### 4.Object methods
-We used Object.value and Object.key when working with coinem and often counted the number of coinem using reducing on the lists of values or keys. This allowed for more efficiency in our code and utilized the preexisting structure of the data.
+We used Object.value and Object.key when working with coinem and often counted the number of coinem using reducing on the lists of values or keys. We also used Object.entries and Object.fromEntries when we delete a user and also delete all coinem this user has ever spent on any event. This allowed for more efficiency in our code and utilized the preexisting structure of the data. 
 
 
 
@@ -95,14 +95,20 @@ We used Material UI for almost every component of the display. Some features to 
 9) radio & radiogroup
 10) chips
 11) badges
+12) theme palette (for color adjustment)
+
 Many of these features were implemented using mapping and at times even nested mapping or both filtering and mapping.
 
-Theme
+We also used different attributes of MUI components, like read-only input box for NEXT_EVENT_UID, multiline input, or contained/outlined button to make our interface user-friendly and good-looking.
+
 ### Modularization
 We restructured much of the code to be more professional and readable, breaking down repeated elements (e.g. Profile/Event) into individual components. 
+
 ### Navigation Bar
 The navigation bar links to main components of the page for easily moving from one feature to another.
-### Calculate coinem info from members & nested mapping
+
+### Calculate coinem info from members 
+Since all coinem info are saved in members objects, calculating coinems for events required a lot of processing with members. We used a helper function to create a new dictionary with username:coinem pairs, specifically for the given event. Then, the total sponsors & total coinem for a event can both be calculated from the result. The calculated sponsors/coinems pairs are also used to map out the chip/badge display for each event. This added calculation but made sure only one copy of coinem info exists.
 
 ### Sync original data & displayed data
 When we added sorting for both members and events, and category filtering for events, we created copies of original lists as a separate state guiding what to display. This approach brought one problem: changes on original data (add/delete) won't be reflected on a selected display without refreshing the page. 
