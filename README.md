@@ -55,7 +55,7 @@ To avoid complication, we stick to the "single source of truth" principle and st
 
 All the members, events, and global variables, are stored in states of 'App' component. Thus, any changes are done on this copy, and the result is passed down to child components as props. 
 
-Certain child components also have states, but their state has nothing to do with their parents, or other components, so it does not violate the one information source principle. 
+Certain child components also have states, but their state has nothing to do with their parents, or other components, so it does not violate the one information source principle.
 
 Generally, input components have states to keep track of the current value of input, before these values are handled by the passed down functions from parent through props:
 - Event: state for editing status & editedEvent
@@ -64,14 +64,17 @@ Generally, input components have states to keep track of the current value of in
 - RadioButtonGroup: state for current selection
 - SortSelection: state for current selection
 
-In addition, EventsPage and PeoplePage both have states for current sorting options AND/OR filtering categories, which only affects their own display but not other parts of the app. 
+In addition, EventsPage and PeoplePage both have states for current sorting options AND/OR filtering categories, which only affects their own display but not other parts of the app, so we did not lift them up to App.js.
 
 #### 2.What props we passed
-when we chose to use state (eg App.js) and when we chose to use props
-keeping all info in one place & using states to manage them
-when to lift states up and when not to
-deep vs shallow copying
-passing handlers as props
+Props are used to pass down information from parent component to child component, and also pass down handlers so that child can inform parent certain information has changed for the parent to update their states. Generally, all the needed information by child are passed down as props.
+
+#### 3.Deep & shallow copying
+React determines whether to rerender a component based on whether its states or props changes, so whenever we use setState, we make sure to create new value rather than mutating the old value. New values are natural when the state is assigned a new string/int (selections or NEXT_EVENT_ID), or when the assigned value comes from uploaded files. However, things get complicated when we alter a list of objects (i.e. events/members). 
+
+For these cases, we make sure to make copies of the original list, using spread, map, filter, etc. Certain times, we use JSON.stringify & JSON.parse to make sure that every individual object inside of the list is copied, so we create a deep copy with different objects, not just shallow copies with a new list structure but point to the old objects. 
+
+#### 4.Object methods
 Object.value/Object.key and reducing
 
 
