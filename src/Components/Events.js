@@ -512,4 +512,4 @@ class EventsPage extends React.Component {
   }
 }
 
-  export {Event,EventsPage, InputEvent};
+  export default EventsPage;

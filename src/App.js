@@ -3,7 +3,7 @@ import './App.css';
 import React from 'react'
 import NavBar from './Components/NavBar';
 import PeoplePage from './Components/PeoplePage';
-import {EventsPage} from './Components/Events';
+import EventsPage from './Components/Events';
 import {Input, Box, Card, CardContent, Typography, TextField, CardActions, Button, FormControl, InputLabel } from '@mui/material';
 
 
