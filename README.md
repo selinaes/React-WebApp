@@ -75,7 +75,7 @@ React determines whether to rerender a component based on whether its states or 
 For these cases, we make sure to make copies of the original list, using spread, map, filter, etc. Certain times, we use JSON.stringify & JSON.parse to make sure that every individual object inside of the list is copied, so we create a deep copy with different objects, not just shallow copies with a new list structure but point to the old objects. 
 
 #### 4.Object methods
-We used Object.value and Object.key when working with coinem and often counted the number of coinem using reducing on the lists of values or keys. This allowed for more efficiency in our code and utilized the preexisting structure of the data.
+We used Object.value and Object.key when working with coinem and often counted the number of coinem using reducing on the lists of values or keys. We also used Object.entries and Object.fromEntries when we delete a user and also delete all coinem this user has ever spent on any event. This allowed for more efficiency in our code and utilized the preexisting structure of the data. 
 
 
 
@@ -85,19 +85,35 @@ We used Object.value and Object.key when working with coinem and often counted t
 ### Material UI
 We used Material UI for almost every component of the display. Some features to take note of are:
 1) icons
-2) cards
+2) iconButtons
+3) cards
 4) pop-up dialogs
 5) spinning sun logo
 6) drop down inputs
 7) text inputs
 8) buttons
-9) chips
-10) badges
+9) radio & radiogroup
+10) chips
+11) badges
+12) theme palette (for color adjustment)
+
 Many of these features were implemented using mapping and at times even nested mapping or both filtering and mapping.
+
+We also used different attributes of MUI components, like read-only input box for NEXT_EVENT_UID, multiline input, or contained/outlined button to make our interface user-friendly and good-looking.
+
 ### Modularization
-We restructured much of the code to be more professional and readable, breaking down repeated elements (e.g. Profile) into individual files and 
+We restructured much of the code to be more professional and readable, breaking down repeated elements (e.g. Profile/Event) into individual components. 
+
 ### Navigation Bar
 The navigation bar links to main components of the page for easily moving from one feature to another.
+
+### Calculate coinem info from members 
+Since all coinem info are saved in members objects, calculating coinems for events required a lot of processing with members. We used a helper function to create a new dictionary with username:coinem pairs, specifically for the given event. Then, the total sponsors & total coinem for a event can both be calculated from the result. The calculated sponsors/coinems pairs are also used to map out the chip/badge display for each event. This added calculation but made sure only one copy of coinem info exists.
+
+### Sync original data & displayed data
+When we added sorting for both members and events, and category filtering for events, we created copies of original lists as a separate state guiding what to display. This approach brought one problem: changes on original data (add/delete) won't be reflected on a selected display without refreshing the page. 
+
+To solve the syncing of original and display data, we no longer save displayed data as separate states, but only save the sorting/filtering option in states. We used a helper method that takes in (1)sorting/filtering option (2)original list, and returns a filtered/sorted list. Then, we call this method to re-calculate a sorted/filtered list at the render, using the latest original list & the current sorting/filtering option. In this way, added/deleted/edited events can be reflected immediately to the sorted/filtered view, without having to refresh.
 
 
 ## Incomplete Code
@@ -107,7 +123,10 @@ At the moment, the following features work inconsistently or are otherwise flawe
 ## Wish List of New Features
 1. Customize alert dialog to be include a more specific warning with information on the user / event being deleted. Replace basic javascript alerts with MUI alert dialogs.
 2. Give each new user a different color and use that color to represent them whenever their username is referred to.
-3. Update Nav Bar depending on the current user and their Join'em access priviledges.
-4. Modularize every aspect of the app into components, rather than having massive files with every aspect.
-5. Remove the chip of a user/coinem pair from Event if one decreases coinem to 0, rather than just disable the - button.
+3. Update Nav Bar depending on the current user and their Join'em access priviledges. Make the NavBar hanging on top of the screen all the time.
+4. Modularize every aspect of the app into components (ex.EditGlobalVariables, FileUploadDownload), rather than having massive files with every aspect.
+5. Remove the chip of a user/coinem pair from Event if one decreases coinem to 0, rather than just disable the "-" button.
+6. Improve the UI for each member's event:coinem pairs, as well as the display of coinem spent/left and events planned/left.
+7. Use Dialogue window to display warnings that global variables cannot be lowered, rather than the current alert.
+
 
