@@ -119,6 +119,7 @@ To solve the syncing of original and display data, we no longer save displayed d
 ## Incomplete Code
 At the moment, the following features work inconsistently or are otherwise flawed:
 1. Add User: For untraceable reasons, the feature that prevents adding a second user with a preexisting username occasionally fails. Additionally, the add user button allows for empty strings which is unhelpful and indicates that the required feature is not functional.
+2. Sorting by secondary key: For sorting, we only implemented it by the designated keys, but didn't add feature to "break the tie" with a secondary key.
 
 ## Wish List of New Features
 1. Customize alert dialog to be include a more specific warning with information on the user / event being deleted. Replace basic javascript alerts with MUI alert dialogs.
