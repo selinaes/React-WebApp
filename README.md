@@ -1,4 +1,4 @@
-# CS 317 Homework 3: Join'em
+# Class Project: Name omitted for confidential reasons
 #### Sara Clark and Jiawei Liu | November 2021
 ## Design and Implementation
 
@@ -7,7 +7,7 @@ Decision to break up code into components:
 
 A key aspect of React is to break down functionalities into smaller parts called "components", smaller components both returns their part of the UI to the parent component they are in, but also deal with certain behaviors strictly within their scope of concern. As Jordan Walke mentioned in his video, React enables engineers to define their components and achieve the separation of concerns (although as newbies our understanding of SoC must be shallow). 
 
-We organized the body of our Join'em Web App into an App.js file, within which we have three major components: 
+We organized the body of our Web App into an App.js file, within which we have three major components: 
 - NavBar: navigating to a part of the page
 - PeoplePage: members-related
 - EventsPage: events-related
@@ -124,7 +124,7 @@ At the moment, the following features work inconsistently or are otherwise flawe
 ## Wish List of New Features
 1. Customize alert dialog to be include a more specific warning with information on the user / event being deleted. Replace basic javascript alerts with MUI alert dialogs.
 2. Give each new user a different color and use that color to represent them whenever their username is referred to.
-3. Update Nav Bar depending on the current user and their Join'em access priviledges. Make the NavBar hanging on top of the screen all the time.
+3. Update Nav Bar depending on the current user and their user type access priviledges. Make the NavBar hanging on top of the screen all the time.
 4. Modularize every aspect of the app into components (ex.EditGlobalVariables, FileUploadDownload), rather than having massive files with every aspect.
 5. Remove the chip of a user/coinem pair from Event if one decreases coinem to 0, rather than just disable the "-" button.
 6. Improve the UI for each member's event:coinem pairs, as well as the display of coinem spent/left and events planned/left.
